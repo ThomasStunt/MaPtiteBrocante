@@ -102,7 +102,7 @@
 			//submit avec le pseudo
 
 			$('#pseudoDiv #buttonSubmit').click( function () {
-				var check = checkField("#pseudoDiv","#pseudo","Pseudo", "#errorPseudo", 6,32);
+				var check = checkField("#pseudoDiv","#pseudo","Pseudo", "#errorPseudo", 6, 32);
 				if(check){
 					// a faire la connexion et rediriger vers index
 					document.location.href="index.html";
@@ -111,7 +111,7 @@
 
 			$('#compteDiv #buttonSubmit').click( function () {
 				var check = checkField("#compteDiv","#email","Email", "#errorEmail", 6,32);
-				var checka = checkField("#compteDiv","#password","Password", "#errorPassword", 6,100);
+				var checka = checkField("#compteDiv","#password","Password", "#errorPassword", 6, 100);
 				if(check && checka){
 					// a faire la connexion
 					document.location.href="index.html";
@@ -124,7 +124,6 @@
 				var field = $(form + " " + name).val();
 				if(field.length == 0){
 					$(form + " " + name).css('border-color','red');
-
 					$(error).html(value + " nul");
 					return false;
 				}
