@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Proposer une brocante</title>
+    <meta charset='utf-8'>
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+
+    <!-- jS -->
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+</head>
+<body>
+	<!-- Accueil-->
+	<div class="container">
+		<label for="welcome"><h2>Proposez une brocante !</h2></label>
+	</div>
+	<br>
+	<!-- Libelle -->
+	<div class="form-group col-sm-10">
+		<label for="inputLibelle">Nom brocanteur :</label>
+		<input type="text" class="form-control" id="inputLibelle" placeholder="Libelle">
+	</div>
+	<!-- Ville -->
+	<div class="form-group col-sm-10">
+		<label for="inputVille">Email brocanteur</label>
+		<input type="text" class="form-control" id="inputVille" placeholder="Ville">
+	</div>
+	<!-- Date -->
+	<div class="form-group col-sm-10">
+		<label for="intputDate">Tel brocanteur</label>
+		<input type="text" class="form-control" id="inputDate" placeholder="Date">
+	</div>
+	<!-- Envoyer -->
+	<div class="form-group col-sm-10">
+		<button type="submit" id="submit" class="btn btn-default">Envoyer</button>
+		<script type="text/javascript">
+			$("#submit").click(function() {
+				/*
+				  Récupération de la data du formulaire
+				*/
+				var dat = {
+					libelle : document.getElementById("inputLibelle").value,
+					ville: document.getElementById("inputVille").value,
+					date: document.getElementById("inputDate").value
+				};
+				console.log(dat);
+				alert(JSON.stringify(dat));
+				/*
+				  Transmission Ajax au serveur REST
+				*/
+				$.ajax({
+					url: "/v1/brocante",
+					type: "POST",
+					dataType: "json",
+ 					processData: false,
+    					contentType: "application/json; charset=UTF-8",
+					data: JSON.stringify(dat),
+					success: function(json) {
+						$("#output").html("Brocante ajoutée !");
+					},
+					error: function(xhr, status, errorThrown) {
+						alert("Something went wrong");
+						console.log("xhr: ", xhr);
+						console.log("status: ", status);
+						console.log("errorThrown: ", errorThrown);
+					},
+				});
+			});
+		</script>
+		<button id="retour" class="btn btn-default">Annuler</button>
+		<script type="text/javascript">
+			$("#retour").click(function() {window.location.href="index.html";});
+		</script>
+	</div>
+	<div class="container container-sm" id="output">
+	</div>
+</body>
+</html>
