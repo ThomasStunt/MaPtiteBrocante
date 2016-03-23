@@ -20,10 +20,8 @@
 	<div class="container">
 		<label for="listerWelc"><h2>Lister les brocantes</h2></label>
 	</div>
-	<div>
-		<button class="btn btn-default" id="brocanteList">Lister les brocantes</button>
+	<div class="form-group col-sm-10">
 		<script type="text/javascript">
-			$("#brocanteList").click(function() {
 				var res = "";
 				$.ajax({
 					url: "/v1/brocante",
@@ -45,11 +43,9 @@
 						console.log("errorThrown: ", errorThrown);
 					}
 				});
-			});
 		</script>
 	</div>
-	<div id="output">
-		
-	</div>
+	<div id="output" style="text-align:center"></div><br/>
+	<div style="text-align:center"><a href="index.html" ><button class="btn btn-default ">Retour</button></a></div>
 </body>
 </html>
