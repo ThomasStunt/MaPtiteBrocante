@@ -45,6 +45,12 @@ public class BrocanteResource {
 		return dao.all();
 	}
 
+	@DELETE
+	@Path("/{id}")
+	public void deleteBrocante(@PathParam("id") int id) {
+		dao.deleteBrocante(id);
+	}
+	
 	/*@GET
 	@Path("/{name}")
 	public Brocante getBrocante(@PathParam("name") String name) {
