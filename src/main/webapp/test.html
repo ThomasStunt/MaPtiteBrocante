@@ -12,8 +12,17 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
 
     <!-- jS -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
+    <script>
+	$(function() {
+		$("#datetimepicker").datepicker({
+			format: "dd/mm/yyyy",
+			viewMode: "years"	
+		});	
+	});
+    </script>
 </head>
 <body>
 	<!-- Accueil-->
@@ -42,14 +51,6 @@
 				</span>
 			</div>
 		</div>
-		<script type="text/javascript">
-		$(function() {
-			$("#datetimepicker").datepicker({
-				format: "dd/mm/yyyy",
-				viewMode: "years"
-			});
-		});
-		</script>
 	</div>
 	<div class="form-group col-sm-10">
 		<button type="submit" id="submit" class="btn btn-default">Envoyer</button>
