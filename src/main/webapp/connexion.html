@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Braderie</title>
+		<meta charset="utf-8">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+		<script src="./main.js"></script>
+	</head>	
+	<body>
+		<div class="container">
+
+			<!-- Top -->
+
+			<div>
+				<h1>Connexion</h1>
+				<hr>
+			</div>		
+			<br/>
+
+			<!-- FORMULAIRE PSEUDO -->
+
+			<div id="pseudoDiv">
+				<form role="form" id="pseudoForm" class="form-horizontal">
+					<div class="form-group">
+						<!-- DIV ERREUR -->
+						<div id="errorPseudo" style="text-align:center"></div>
+						<label class="control-label col-sm-2">Pseudo : </label>
+						<div class="col-sm-10">
+							<input type="text" id="pseudo" class="form-control"/>
+						</div>	
+					</div>
+				</form>
+				<!-- button a l'exterieur pour eviter de recharger la page -->
+				<div class="col-sm-offset-2 col-sm-10">
+					<button id="buttonSubmit" class="btn btn-default">Submit</button>
+				</div>
+			</div>
+
+			<!-- FORMULAIRE EMAIL PASSWORD -->
+			<div id="compteDiv">
+				<form role="form" id="compteForm" class="form-horizontal">
+					<div class="form-group">
+						<div id="errorEmail" style="text-align:center"></div>
+						<label class="control-label col-sm-2">Email : </label>
+						<div class="col-sm-10">
+							<input type="email" id="email" class="form-control"/>
+						</div>	
+					</div>
+
+					<div class="form-group">
+						<div id="errorPassword" style="text-align:center"></div>
+						<label class="control-label col-sm-2">Password : </label>
+						<div class="col-sm-10">
+							<input type="password" id="password" class="form-control"/>
+						</div>	
+					</div>
+				</form>
+				<!-- button a l'exterieur pour eviter de recharger la page -->
+				<div class="col-sm-offset-2 col-sm-10">
+					<button id="buttonSubmit" class="btn btn-default">Submit</button>
+				</div>
+			</div>
+
+			<!-- BOUTTON DE CONNEXION -->
+
+			<button id="pseudoConnexion" class="btn btn-default"> Connextion avec pseudo</button>
+			<button id="compteConnexion" class="btn btn-default"> Connextion avec compte</button>
+
+		</div>	
+	</body>
+
+	<!-- SCRIPT  -->
+
+	<script type="text/javascript" language="javascript">
+		$(document).ready( function () {
+			//cache les composants inutile
+			$('#pseudoConnexion').hide();
+			$('#compteDiv').hide();
+
+			// quand on clique sur "Connextion avec compte"
+			$('#compteConnexion').click( function () {
+				$('#pseudoDiv').hide();
+				$('#compteConnexion').hide();
+
+				$('#compteDiv').show();
+				$('#pseudoConnexion').show();
+			});
+
+			// quand on clique sur "Connextion avec pseudo"
+			$('#pseudoConnexion').click( function () {
+				$('#pseudoConnexion').hide();
+				$('#compteDiv').hide();
+
+				$('#compteConnexion').show();
+				$('#pseudoDiv').show();
+			});
+
+			
+			//submit avec le pseudo
+
+			$('#pseudoDiv #buttonSubmit').click( function () {
+				var check = checkField("#pseudoDiv","#pseudo","Pseudo", "#errorPseudo", 6,32);
+				if(check){
+					// a faire la connexion et rediriger vers index
+					document.location.href="index.html";
+				}
+			});
+
+			$('#compteDiv #buttonSubmit').click( function () {
+				var check = checkField("#compteDiv","#email","Email", "#errorEmail", 6,32);
+				var checka = checkField("#compteDiv","#password","Password", "#errorPassword", 6,100);
+				if(check && checka){
+					// a faire la connexion
+					document.location.href="index.html";
+				}
+			});
+
+			//submit avec compte et code
+
+			function checkField(form, name, value, error, min, max) {
+				var field = $(form + " " + name).val();
+				if(field.length == 0){
+					$(form + " " + name).css('border-color','red');
+
+					$(error).html(value + " nul");
+					return false;
+				}
+				else if(field.length < min){
+					$(form + " " + name).css('border-color','red');
+					$(error).html(value + " trop court");
+					return false;
+				}else if(field.length > max){
+					$(form + " " + name).css('border-color','red');
+					$(error).html(value + " trop long");
+					return false;
+				}else{
+					$(form + " " + name).css('border-color','');
+					$(error).html("");
+				}
+				return true;
+			};
+
+		});
+	</script>	
+</html>
