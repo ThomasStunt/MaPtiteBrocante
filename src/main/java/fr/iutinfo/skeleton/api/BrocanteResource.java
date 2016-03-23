@@ -16,10 +16,54 @@ import java.util.Map;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class BrocanteResource {
-    private static Map<Integer, Brocante> brocantes = new HashMap<>();
+
+	private static BrocanteDao dao = BDDFactory.getDbi().open(BrocanteDao.class);
+	
+    
    Logger logger = LoggerFactory.getLogger(BrocanteResource.class);
 
-    @POST
+   
+   public BrocanteResource() {
+		try {
+			System.out.println("Creating table");
+			dao.createBrocanteTable();
+		} catch (Exception e) {
+			System.out.println("Table déjà là !");
+		}
+	}
+	
+	@POST
+	public Brocante createBrocante(Brocante brocante) {
+       int id = dao.insert(brocante);
+       brocante.setId(id);
+       return brocante;
+	}
+	
+
+	@GET
+	public List<Brocante> getAllBrocantes() {
+		return dao.all();
+	}
+
+	/*@GET
+	@Path("/{name}")
+	public Brocante getBrocante(@PathParam("name") String name) {
+		Brocante brocante = dao.findByName(name);
+		if (brocante == null) {
+			throw new WebApplicationException(404);
+		}
+		return brocante;
+	}*/
+
+   
+	/*
+	 * Old resource
+	 * 
+	 */
+	
+	//private static Map<Integer, Brocante> brocantes = new HashMap<>();
+	
+   /* @POST
     public Brocante createBrocante(Brocante brocante) {
         int id = brocantes.size();
         brocante.setId(id + 1);
@@ -77,5 +121,5 @@ public class BrocanteResource {
     	logger.info("ok "+brocantes.values());
         return new ArrayList<>(brocantes.values());
     }
-
+*/
 }

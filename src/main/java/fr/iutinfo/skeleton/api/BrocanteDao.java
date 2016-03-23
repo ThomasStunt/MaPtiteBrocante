@@ -11,13 +11,35 @@ import org.skife.jdbi.v2.sqlobject.customizers.RegisterMapperFactory;
 import org.skife.jdbi.v2.tweak.BeanMapperFactory;
 
 public interface BrocanteDao {
-	@SqlUpdate("create table brocante (id integer primary key autoincrement, libelle varchar(100), ville varchar(100), addresse varchar(100), date varchar(9), heureD varchar(5), heureF(5), desc text, user_id integer , CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES user(id))")
+	@SqlUpdate("create table brocante "
+			+ "(id integer primary key autoincrement,"
+			+ " libelle varchar(255),"
+			+ " nomOrganisateur varchar(255),"
+			+ " emailOrganisateur varchar(255),"
+			+ " telOrganisateur varchar(255),"
+			+ " pays varchar(255), "
+			+ "departement integer, "
+			+ "ville varchar(255), "
+			+ "codePostal varchar(5), "
+			+ "rue varchar(255) , "
+			+ "date varchar(255), "
+			+ "heure_debut varchar(5), "
+			+ "heure_fin varchar(5), "
+			+ "salle varchar(255), "
+			+ "handicape boolean, "
+			+ "prixEmplacement float)")
 	void createBrocanteTable();
 
-	@SqlUpdate("insert into brocante (libelle,ville,addresse,date,heureD,heureF,desc, user_id) values (:libelle, :ville, :addresse, :date, :heure_debut, :heure_fin, :desc: user_id)")
+@SqlUpdate("insert into brocante (libelle, nomOrganisateur, emailOrganisateur, telOrganisateur, pays, departement, ville, codePostal, rue, date, heure_debut, heure_fin, salle, handicape, prixEmplacement)"
+		+ " values (:libelle, :nomOrganisateur, :emailOrganisateur, :telOrganisateur, :pays, :departement, :ville, :codePostal, :rue, :date, :heure_debut, :heure_fin, :salle, :handicape, :prixEmplacement)")
 	@GetGeneratedKeys
 	int insert(@BindBean() Brocante brocante);
 	
-	
+
+	@SqlQuery("select * from brocante order by id")
+	@RegisterMapperFactory(BeanMapperFactory.class)
+	List<Brocante> all();
+
+	void close();
 	
 }
