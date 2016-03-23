@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Proposer une brocante</title>
+    <meta charset='utf-8'>
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+
+    <!-- jS -->
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+</head>
+<body>
+	<!-- Accueil-->
+	<div class="container">
+		<label for="welcome"><h2>Proposez une brocante !</h2></label>
+	</div>
+	<br>
+	<!-- NomBrocanteur -->
+	<div class="form-group col-sm-10">
+		<label for="inputNomBrocanteur">Nom brocanteur :</label>
+		<input type="text" class="form-control" id="inputNomBroc" placeholder="Nom brocanteur">
+	</div>
+	<!-- EmailBrocanteur -->
+	<div class="form-group col-sm-10">
+		<label for="inputEmailBrocanteur">Email brocanteur</label>
+		<input type="text" class="form-control" id="inputMailBroc" placeholder="Email">
+	</div>
+	<!-- TelBrocanteur -->
+	<div class="form-group col-sm-10">
+		<label for="intputTelBrocanteur">Tel brocanteur</label>
+		<input type="text" class="form-control" id="inputTelBroc" placeholder="Téléphone">
+	</div>
+	<!-- Pays -->
+	<div class="form-group col-sm-10">
+		<label for="inputPays">Pays brocante</label>
+		<input type="text" class="form-control" id="inputPays" placeholder="Pays">
+	</div>
+	<!-- Departement -->
+	<div class="form-group col-sm-10">
+		<label for="inputDepartement">Département brocante</label>
+		<input type="text" class="form-control" id="inputDepartement" placeholder="Département">
+	</div>
+	<!-- Ville -->
+	<div class="form-group col-sm-10">
+		<label for="inputVille">Ville brocante</label>
+		<input type="text" class="form-control" id="inputVille" placeholder="Ville">
+	</div>
+	<!-- CodePostal -->
+	<div class="form-group col-sm-10">
+		<label for="inputCodePostal">Code postal brocante</label>
+		<input type="text" class="form-control" id="inputCodePost" placeholder="Code postal">
+	</div>
+	<!-- Rue -->
+	<div class="form-group col-sm-10">
+		<label for="inputAddr">Nom de la brocante</label>
+		<input type="text" class="form-control" id="inputAddr1" placeholder="Adresse 1">
+		<input type="text" class="form-control" id="inputAddr2" placeholder="Adresse 2">
+		<input type="text" class="form-control" id="inputAddr3" placeholder="Adresse 3">
+		<input type="text" class="form-control" id="inputAddr4" placeholder="Adresse 4">
+	</div>
+	<!-- Date -->
+	<div class="form-group col-sm-10">
+		<label for="inputCodePostal">Date brocante</label>
+		<input type="text" class="form-control" id="inputDate" placeholder="Date">
+	</div>
+	<!-- HeureDeb -->
+	<div class="form-group col-sm-10">
+		<label for="inputHDeb">Heure début</label>
+		<input type="text" class="form-control" id="inputHDeb" placeholder="Heure du début">
+	</div>
+	<!-- HeureFin -->
+	<div class="form-group col-sm-10">
+		<label for="inputHDeb">Heure fin</label>
+		<input type="text" class="form-control" id="inputHFin" placeholder="Heure de fin">
+	</div>
+	<!-- Salle -->
+	<div class="form-group col-sm-10">
+		<label for="inputSalle">Salle</label>
+		<input type="text" class="form-control" id="inputSalle" placeholder="Salle">
+	</div>
+	<!-- AcessHandic -->
+	<div class="form-group col-sm-10">
+		<label for="inputHandic">Salle</label>
+		<br><input type="checkbox" id="handicY"> Oui.
+		<br><input type="checkbox" id="handicN"> Non.
+	</div>
+	<!-- PrixEmplacement -->
+	<div class="form-group col-sm-10">
+		<label for="inputPrix">Prix</label>
+		<input type="text" class="form-control" id="inputPrix" placeholder="Prix">
+	</div>
+	<!-- Envoyer -->
+	<div class="form-group col-sm-10">
+		<button type="submit" id="submit" class="btn btn-default">Envoyer</button>
+	</div>
+</body>
+</html>
