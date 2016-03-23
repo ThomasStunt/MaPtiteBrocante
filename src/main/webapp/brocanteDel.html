@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Supprimer une brocante</title>
+    <meta charset='utf-8'>
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+
+    <!-- jS -->
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+</head>
+<body>
+	<!-- Accueil-->
+	<div class="container">
+		<label for="delWelc"><h2>Supprimer une brocante</h2></label>
+	</div>
+	<div class="form-group col-sm-10">
+		<script type="text/javascript">
+			//$("#listDel").click(function() {
+				var res = "<div class=\"form-group col-sm-10\"><table class=\"table table-striped table-bordered\" style=\"text-align:center\"><tr><td><b>Id brocante</b></td><td><b>Libelle brocante</b></td><td></td></tr><tr>";
+				$.ajax({
+					url: "v1/brocante",
+					type: "GET",
+					dataType: "json",
+					success: function(json) {
+						for(i in json) {
+							var id = json[i].id;
+							var lib = json[i].libelle;
+							res+="<td>"+id+"</td><td>"+lib+"</td><td>"+"<button class=\"glyphicon glyphicon-remove\" onclick=\"deleteId("+id+")\">"+"</button></tr><tr>";
+						}
+						res+="</tr></table></div>";
+						$("#output").html(res);
+					}
+				});
+			//});
+			deleteId = function(idx) {
+				alert(idx);
+				$.ajax({
+					url: "v1/brocante/"+idx,
+					type: "DELETE",
+					success: function(json) {
+						document.location.href="brocanteDel.html";
+					},
+					error: function(xhr, status, errorThrown) {
+						alert("Something went wrong");
+						console.log("xhr: ", xhr);
+						console.log("status: ", status);
+						console.log("errorThrown: ", errorThrown);
+					}
+				});	
+			};
+		</script>
+	</div>
+	<div id="output">
+		
+	</div>
+</body>
+</html>
