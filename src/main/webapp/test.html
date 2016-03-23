@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <title>Proposer une brocante</title>
+    <meta charset='utf-8'>
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+
+    <!-- bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">
+
+    <!-- jS -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+	<!-- Accueil-->
+	<div class="container">
+		<label for="welcome"><h2>Proposez une brocante !</h2></label>
+	</div>
+	<br>
+	<!-- Nom -->
+	<div class="form-group col-sm-10">
+		<label for="inputNom">Nom de la brocante</label>
+		<input type="text" class="form-control" id="inputLieu" placeholder="Nom">
+	</div>
+	<!-- Lieu -->
+	<div class="form-group col-sm-10">
+		<label for="inputLieu">Lieu de la brocante</label>
+		<input type="text" class="form-control" id="inputLieu" placeholder="Lieu">
+	</div>
+	<!-- Calendrier -->
+	<div class="form-group col-sm-10">
+		<label for="inputDate">Date de la brocante</label>
+		<div class="form-group">
+			<div class="input-group date" id="datetimepicker">
+				<input type='text' class="form-control" placeholder="Date"/>
+				<span class="input-group-addon">
+					<span class="glyphicon glyphicon-calendar" id="calendar"></span>
+				</span>
+			</div>
+		</div>
+		<script type="text/javascript">
+		$(function() {
+			$("#datetimepicker").datepicker({
+				format: "dd/mm/yyyy",
+				viewMode: "years"
+			});
+		});
+		</script>
+	</div>
+	<div class="form-group col-sm-10">
+		<button type="submit" id="submit" class="btn btn-default">Envoyer</button>
+	</div>
+</body>
+</html>
