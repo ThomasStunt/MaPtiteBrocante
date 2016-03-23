@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <title>Proposer une brocante</title>
+    <title>Lister les brocantes</title>
     <meta charset='utf-8'>
     <!-- jQuery -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
@@ -18,7 +18,7 @@
 <body>
 	<!-- Accueil-->
 	<div class="container">
-		<label for="welcome"><h2>Lister les brocantes</h2></label>
+		<label for="listerWelc"><h2>Lister les brocantes</h2></label>
 	</div>
 	<div>
 		<button class="btn btn-default" id="brocanteList">Lister les brocantes</button>
@@ -31,7 +31,10 @@
 					dataType: "json",
 					success: function(json) {
 						for(i in json) {
-							res+="<br>nom : "+json[i].libelle+"<br>ville : "+json[i].ville+"<br>date : "+json[i].date+"<br>==================<br>";
+							res+="<br>nom : "+json[i].libelle
+							res+="<br>ville : "+json[i].ville
+							res+="<br>date : "+json[i].date
+							res+="<br>==================<br>";
 	    					}
 						$("#output").html(res);
 					},
@@ -46,6 +49,7 @@
 		</script>
 	</div>
 	<div id="output">
+		
 	</div>
 </body>
 </html>
