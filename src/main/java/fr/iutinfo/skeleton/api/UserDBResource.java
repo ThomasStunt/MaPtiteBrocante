@@ -22,12 +22,36 @@ public class UserDBResource {
 
     public UserDBResource() {
 		try {
+			logger.debug("\n\nCreating table !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n");
 			dao.createUserTable();
-			dao.insert(new User(0,"Margaret Thatcher", "la Dame de fer"));
+			System.out.println("Creating table");
+			User user = new User(0,"admin", "le meilleur admin");
+			user.setPassword("admin");
+			user.setRank(1);
+			dao.insert(user);
+			
+			user = new User(0,"user", "le meilleur user");
+			user.setPassword("user");
+			dao.insert(user);
+			
 		} catch (Exception e) {
-			System.out.println("Table déjà là !");
+			logger.debug("\n\nCreating table !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n");
 		}
 	}
+    
+    @GET
+	@Path("/login")
+    public User login(@Context SecurityContext context) {
+		User currentUser = (User) context.getUserPrincipal();
+		logger.debug("Current User :" + currentUser.toString());
+		if (User.isAnonymous(currentUser)) {
+			logger.debug("UNAUTHORIZED");
+			throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)
+					.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"Ma ptite brocante\"")
+					.entity("Ressouce requires login.").build());
+		}
+		return currentUser;
+    }
 	
 	@POST
 	public User createUser(User user){

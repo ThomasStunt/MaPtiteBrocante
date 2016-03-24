@@ -3,6 +3,7 @@ package fr.iutinfo.skeleton.api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.HttpHeaders;
@@ -39,14 +40,10 @@ public class BrocanteResource {
 	}
 
 	@POST
+	@RolesAllowed({"user"})
 	public Brocante createBrocante(Brocante brocante, @Context SecurityContext context) {
 		User currentUser = (User) context.getUserPrincipal();
 		logger.debug("Current User :" + currentUser.toString());
-		if (User.isAnonymous(currentUser)) {
-			throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)
-					.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"Mon application\"")
-					.entity("Ressouce requires login.").build());
-		}
 		if (currentUser.getRank() > 0)
 			brocante.setValide(true);
 		else
@@ -58,6 +55,7 @@ public class BrocanteResource {
 
 	@GET
 	@Path("/all")
+	@RolesAllowed({"user"})
 	public List<Brocante> getAllBrocantes(@Context SecurityContext context) {
 		User currentUser = (User) context.getUserPrincipal();
 		logger.debug("Current User :" + currentUser.toString());
@@ -76,10 +74,11 @@ public class BrocanteResource {
 
 	@DELETE
 	@Path("/{id}")
+	//@RolesAllowed({"user"})
 	public void deleteBrocante(@PathParam("id") int id, @Context SecurityContext context) {
 		User currentUser = (User) context.getUserPrincipal();
 		logger.debug("Current User :" + currentUser.toString());
-		if (User.isAnonymous(currentUser) || currentUser.getRank() <= 0) {
+		if (currentUser.getRank() <= 0) {
 			throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)
 					.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"Mon application\"")
 					.entity("Ressouce requires login.").build());
@@ -95,6 +94,7 @@ public class BrocanteResource {
 
 	@PUT
 	@Path("{id}")
+	@RolesAllowed({"user"})
 	public Response updateBrocante(@PathParam("id") int id, Brocante brocante, @Context SecurityContext context) {
 		User currentUser = (User) context.getUserPrincipal();
 		logger.debug("Current User :" + currentUser.toString());
