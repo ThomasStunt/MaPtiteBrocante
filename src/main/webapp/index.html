@@ -23,10 +23,147 @@
 			</div>
 
 			<div style="text-align:center">
-				<a href="brocanteList.html"><button class="btn btn-default">Lister les braderies</button></a>
-				<a href="brocanteAdd.html"><button class="btn btn-default">Ajouter une braderie</button></a>
-				<a href="brocanteDel.html"><button class="btn btn-default">Supprimer une braderie</button></a>
+				<button id="listBraderie" class="btn btn-default">Lister les braderies</button>
+				<button id="addBraderie" class="btn btn-default">Ajouter une braderie</button>
+				<button id="delBraderie" class="btn btn-default">Supprimer une braderie</button>
 			</div>
+
+			<div id="outputList" class="form-group col-sm-10">
+				<div class="form-group col-sm-10">
+					<script type="text/javascript">
+						$('#listBraderie').click( function () {
+							$("#outputAdd").hide();
+							$("#outputDel").hide();
+							$("#outputList").show();
+							var res = "";
+							$.ajax({
+								url: "/v1/brocante",
+								type: "GET",
+								dataType: "json",
+								success: function(json) {
+									for(i in json) {
+										res+="<br>nom : "+json[i].libelle
+										res+="<br>ville : "+json[i].ville
+										res+="<br>date : "+json[i].date
+										res+="<br>==================<br>";
+				    					}
+									$("#outputList").html(res);
+								},
+								error: function(xhr, status, errorThrown) {
+									alert("Something went wrong");
+									console.log("xhr: ", xhr);
+									console.log("status: ", status);
+									console.log("errorThrown: ", errorThrown);
+								}
+							});
+						});
+					</script>
+				 </div>
+			</div>
+			
+			<div id="outputAdd" class="form-group col-sm-10" style="display:none;">
+				<!-- Libelle -->
+				<div class="form-group col-sm-10">
+				<label for="inputLibelle">Libelle brocante :</label>
+				<input type="text" class="form-control" id="inputLibelle" placeholder="Libelle">
+				</div>
+				<!-- Ville -->
+				<div class="form-group col-sm-10">
+					<label for="inputVille">Ville brocante :</label>
+					<input type="text" class="form-control" id="inputVille" placeholder="Ville">
+				</div>
+				<!-- Date -->
+				<div class="form-group col-sm-10">
+					<label for="intputDate">Date brocante :</label>
+					<input type="text" class="form-control" id="inputDate" placeholder="Date">
+				</div>
+
+				<button type="submit" id="submit" class="btn btn-default">Envoyer</button>
+				<script type="text/javascript">
+					$("#submit").click(function() {
+						/*
+						  Récupération de la data du formulaire
+						*/
+						var dat = {
+							libelle : document.getElementById("inputLibelle").value,
+							ville: document.getElementById("inputVille").value,
+							date: document.getElementById("inputDate").value
+						};
+						console.log(dat);
+						/*
+						  Transmission Ajax au serveur REST
+						*/
+						$.ajax({
+							url: "/v1/brocante",
+							type: "POST",
+							dataType: "json",
+		 					processData: false,
+		    					contentType: "application/json; charset=UTF-8",
+							data: JSON.stringify(dat),
+							success: function(json) {
+								$("#output").html("Brocante ajoutée !");
+							},
+							error: function(xhr, status, errorThrown) {
+								alert("Something went wrong");
+								console.log("xhr: ", xhr);
+								console.log("status: ", status);
+								console.log("errorThrown: ", errorThrown);
+							},
+						});
+					});
+				</script>
+			</div>
+
+			<div class="form-group col-sm-10" id="outputDel" style="display:none;">
+				<script type="text/javascript">
+					$("#delBraderie").click(function() {
+						$("#outputAdd").hide();
+						$("#outputDel").show();
+						$("#outputList").hide();
+				
+						var res = "<div class=\"form-group col-sm-10\"><table class=\"table table-striped table-bordered\" style=\"text-align:center\"><tr><td><b>Id brocante</b></td><td><b>Libelle brocante</b></td><td></td></tr><tr>";
+						$.ajax({
+							url: "v1/brocante",
+							type: "GET",
+							dataType: "json",
+							success: function(json) {
+								for(i in json) {
+									var id = json[i].id;
+									var lib = json[i].libelle;
+									res+="<td>"+id+"</td><td>"+lib+"</td><td>"+"<button class=\"glyphicon glyphicon-remove\" onclick=\"deleteId("+id+")\">"+"</button></tr><tr>";
+								}
+								res+="</tr></table></div>";
+								$("#outputDel").html(res);
+							}
+						});
+					});
+					deleteId = function(idx) {
+						alert(idx);
+						$.ajax({
+							url: "v1/brocante/"+idx,
+							type: "DELETE",
+							success: function(json) {
+								document.location.href="brocanteDel.html";
+							},
+							error: function(xhr, status, errorThrown) {
+								alert("Something went wrong");
+								console.log("xhr: ", xhr);
+								console.log("status: ", status);
+								console.log("errorThrown: ", errorThrown);
+							}
+						});	
+					};
+				</script>
+
+				<script>
+				$("#addBraderie").click(function() {
+					$("#outputAdd").show();
+					$("#outputDel").hide();
+					$("#outputList").hide();
+				});
+			</script>
+
+			</div>	
 		</div>	
 	</body>	
 </html>
