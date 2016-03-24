@@ -4,7 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+
 import java.util.List;
 
 @Path("/userdb")
@@ -25,7 +30,7 @@ public class UserDBResource {
 	}
 	
 	@POST
-	public User createUser(User user) {
+	public User createUser(User user){
         user.resetPasswordHash();
         int id = dao.insert(user);
         user.setId(id);

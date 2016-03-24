@@ -19,18 +19,21 @@ public class User implements Principal {
     private String password;
     private String passwdHash;
     private String salt;
+    private int rank;
 
     private static User anonymous = new User(-1, "Anonymous", "anonym");
 
     public User(int id, String name) {
         this.id = id;
         this.name = name;
+        this.setRank(0);
     }
 
     public User(int id, String name, String alias) {
         this.id = id;
         this.name = name;
         this.alias = alias;
+        this.setRank(0);
     }
 
     public User() {
@@ -145,4 +148,12 @@ public class User implements Principal {
     public static boolean isAnonymous(User currentUser) {
         return currentUser.getId() == getAnonymousUser().getId();
     }
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
 }
