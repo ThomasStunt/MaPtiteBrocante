@@ -23,7 +23,7 @@ public class Brocante {
 	private String salle;
 	private boolean handicape;
 	private float prixEmplacement;
-	private boolean valide;
+	private boolean valide = false;
 	
 
 	public Brocante(){
