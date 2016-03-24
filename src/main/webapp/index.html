@@ -9,9 +9,16 @@
 
 		<script src="other/jquery-ui.min.js"></script>
 
+
 		<link rel="stylesheet" href="other/jquery-ui.min.js">
 
-		<script src="./main.js"></script>
+		<style>
+	      #map {
+	        width: 500px;
+		    height: 400px;
+		    background-color: #CCC;
+	      }
+	    </style>
 	</head>	
 	<body>
 		<div class="container">
@@ -26,65 +33,80 @@
 				<button id="listBraderie" class="btn btn-default">Lister les braderies</button>
 				<button id="addBraderie" class="btn btn-default">Ajouter une braderie</button>
 				<button id="delBraderie" class="btn btn-default">Supprimer une braderie</button>
+				<button id="showMap" class="btn btn-default">Afficher les braderies aux alentours</button>
 			</div>
 			<hr>
 
-			<div id="outputList" class="form-group col-sm-10">
-				<div class="form-group col-sm-10">
-					<script type="text/javascript">
-						$('#listBraderie').click( function () {
-							$("#outputAdd").hide();
-							$("#outputDel").hide();
-							$("#outputList").show();
-							var res = "";
-							$.ajax({
-								url: "/v1/brocante",
-								type: "GET",
-								dataType: "json",
-								success: function(json) {
-									if(json[0] == null) {
-										$("#outputList").html("Aucune brocante disponible.");
-									} else {
-										var res = "<div class=\"form-group col-sm-10\"><table class=\"table table-striped table-bordered\" style=\"text-align:center\"><tr><td><b>Libelle</b></td><td><b>Ville</b></td><td><b>Date</b></td></tr><tr>";
-										for(i in json) {
-											res+="<td>"+json[i].libelle+"</td>";
-											res+="<td>"+json[i].ville+"</td>";
-											res+="<td>"+json[i].date+"</td>";
-											res+="</tr><tr>"
-					    					}
-										res+="</tr></table></div>";
-										$("#outputList").html(res);
-									}
-								},
-								error: function(xhr, status, errorThrown) {
-									alert("Something went wrong");
-									console.log("xhr: ", xhr);
-									console.log("status: ", status);
-									console.log("errorThrown: ", errorThrown);
+			<div id="map" style="text-align:center display:none"></div>
+			<script>
+		      function initMap() {
+		        var mapDiv = document.getElementById('map');
+		        var map = new google.maps.Map(mapDiv, {
+		          center: {lat: 44.540, lng: -78.546},
+		          zoom: 8
+		        });
+		      }
+		    </script>
+		    <script src="https://maps.googleapis.com/maps/api/js?callback=initMap"
+        async defer></script>
+
+
+
+			<div id="outputList">
+				<script type="text/javascript">
+					$('#listBraderie').click( function () {
+						$("#outputAdd").hide();
+						$("#outputDel").hide();
+						$("#outputList").show();
+						$("#map").hide();
+						var res = "";
+						$.ajax({
+							url: "/v1/brocante",
+							type: "GET",
+							dataType: "json",
+							success: function(json) {
+								if(json[0] == null) {
+									$("#outputList").html("Aucune brocante disponible.");
+								} else {
+									var res = "<div><table class=\"table table-striped table-bordered\" style=\"text-align:center\"><tr><td><b>Libelle</b></td><td><b>Ville</b></td><td><b>Date</b></td></tr><tr>";
+									for(i in json) {
+										res+="<td>"+json[i].libelle+"</td>";
+										res+="<td>"+json[i].ville+"</td>";
+										res+="<td>"+json[i].date+"</td>";
+										res+="</tr><tr>"
+				    					}
+									res+="</tr></table></div>";
+									$("#outputList").html(res);
 								}
-							});
+							},
+							error: function(xhr, status, errorThrown) {
+								alert("Something went wrong");
+								console.log("xhr: ", xhr);
+								console.log("status: ", status);
+								console.log("errorThrown: ", errorThrown);
+							}
 						});
-					</script>
-				 </div>
+					});
+				</script>
 			</div>
 			
-			<div id="outputAdd" class="form-group col-sm-10" style="display:none;">
+			<div id="outputAdd" style="display:none;">
 				<!-- Libelle -->
-				<div class="form-group col-sm-10">
+				<div>
 					<label for="inputLibelle">Libelle brocante :</label>
 					<input type="text" class="form-control" id="inputLibelle" placeholder="Libelle">
 				</div>
 				<!-- Ville -->
-				<div class="form-group col-sm-10">
+				<div>
 					<label for="inputVille">Ville brocante :</label>
 					<input type="text" class="form-control" id="inputVille" placeholder="Ville">
 				</div>
 				<!-- Date -->
-				<div class="form-group col-sm-10">
+				<div >
 					<label for="intputDate">Date brocante :</label>
 					<input type="text" class="form-control" id="inputDate" placeholder="Date">
 				</div>
-				<div class="form-group col-sm-10">
+				<div>
 					<button type="submit" id="submit" class="btn btn-default">Envoyer</button>
 					<script type="text/javascript">
 						$("#submit").click(function() {
@@ -122,12 +144,13 @@
 				</div>
 			</div>
 
-			<div class="form-group col-sm-10" id="outputDel" style=" margin-left:auto margin-right:auto display:none">
+			<div id="outputDel" style="display:none">
 				<script type="text/javascript">
 					$("#delBraderie").click(function() {
 						$("#outputAdd").hide();
 						$("#outputDel").show();
 						$("#outputList").hide();
+						$("#map").hide();
 						showList();
 					});
 
@@ -149,7 +172,7 @@
 					};
 
 					function showList () {
-						var res = "<div class=\"form-group col-sm-10\"><table class=\"table table-striped table-bordered\" style=\"text-align:center\"><tr><td><b>Id brocante</b></td><td><b>Libelle brocante</b></td><td></td></tr><tr>";
+						var res = "<div><table class=\"table table-striped table-bordered\" style=\"text-align:center\"><tr><td><b>Id brocante</b></td><td><b>Libelle brocante</b></td><td></td></tr><tr>";
 
 						$.ajax({
 							url: "v1/brocante",
@@ -175,6 +198,16 @@
 				<script>
 				$("#addBraderie").click(function() {
 					$("#outputAdd").show();
+
+					$("#map").hide();
+					$("#outputDel").hide();
+					$("#outputList").hide();
+				});
+
+				$('#showMap').click( function () {
+					$("#map").show();
+
+					$("#outputAdd").hide();
 					$("#outputDel").hide();
 					$("#outputList").hide();
 				});
