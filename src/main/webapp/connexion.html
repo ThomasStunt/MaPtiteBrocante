@@ -57,6 +57,7 @@
 							req.setRequestHeader("Authorization", "Basic " + btoa($("#pseudoInscrit").val() + ":" + $("#pwdInscrit").val()));
 						       },
 						       success: function (data){
+						    	   setCookie("name", $("#pseudoInscrit").val(), 1000);
 							document.location.href="index.html";
 						       },
 						       error : function(jqXHR, textStatus, errorThrown) {
