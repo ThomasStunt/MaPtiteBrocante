@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Braderie</title>
+		<title>Connexion</title>
 		<meta charset="utf-8">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.js"></script>
 
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+		<script src="http://crypto-js.googlecode.com/svn/tags/3.0.2/build/rollups/aes.js"></script>
+
 
 		<script src="./main.js"></script>
 	</head>	
@@ -21,7 +23,6 @@
 			<br/>
 
 			<!-- FORMULAIRE PSEUDO -->
-
 			<div id="pseudoDiv">
 				<form role="form" id="pseudoForm" class="form-horizontal">
 					<div class="form-group">
@@ -29,46 +30,55 @@
 						<div id="errorPseudo" style="text-align:center"></div>
 						<label class="control-label col-sm-2">Pseudo : </label>
 						<div class="col-sm-10">
-							<input type="text" id="pseudo" class="form-control"/>
+							<input type="text" id="pseudoInscrit" class="form-control"/>
+						</div>	
+					</div>
+				</form>
+				<form role="form" id="pwdForm" class="form-horizontal">
+					<div class="form-group">
+						<!-- DIV ERREUR -->
+						<div id="errorPwd" style="text-align:center"></div>
+						<label class="control-label col-sm-2">Mot de passe : </label>
+						<div class="col-sm-10">
+							<input type="text" id="pwdInscrit" class="form-control"/>
 						</div>	
 					</div>
 				</form>
 				<!-- button a l'exterieur pour eviter de recharger la page -->
 				<div class="col-sm-offset-2 col-sm-10">
-					<button id="buttonSubmit" class="btn btn-default">Submit</button>
+					<button id="submitInscrit" class="btn btn-default">Submit</button>
+				</div>
+				<script type="text/javascript" language="javascript">
+					$("#submitInscrit").click(function() {
+						if($("#pseudoInscrit").val() != null) {
+							$.ajax({
+								url: "/v1/userdb/"+$("#pseudoInscrit").val(),
+								type: "GET",
+								contentType: "application/json; charset=UTF-8",
+								dataType: "json",
+								success: function(json) {
+									if(json.salt !== $("#pwdInscrit").val()) {
+										$("#output").html("Mauvaise combinaison login / pwd");
+									} else {
+										document.location.href="index.html";
+									}
+								},
+								error: function(xhr, status, errorThrown) {
+									$("#output").html("User inexistant");
+								}
+							});
+						}
+					});
+				</script>
+				<div class="form-group col-sm-10" id="output">
+
 				</div>
 			</div>
-
-			<!-- FORMULAIRE EMAIL PASSWORD -->
-			<div id="compteDiv">
-				<form role="form" id="compteForm" class="form-horizontal">
-					<div class="form-group">
-						<div id="errorEmail" style="text-align:center"></div>
-						<label class="control-label col-sm-2">Email : </label>
-						<div class="col-sm-10">
-							<input type="email" id="email" class="form-control"/>
-						</div>	
-					</div>
-
-					<div class="form-group">
-						<div id="errorPassword" style="text-align:center"></div>
-						<label class="control-label col-sm-2">Password : </label>
-						<div class="col-sm-10">
-							<input type="password" id="password" class="form-control"/>
-						</div>	
-					</div>
-				</form>
-				<!-- button a l'exterieur pour eviter de recharger la page -->
-				<div class="col-sm-offset-2 col-sm-10">
-					<button id="buttonSubmit" class="btn btn-default">Submit</button>
-				</div>
-			</div>
-
 			<!-- BOUTTON DE CONNEXION -->
-
-			<button id="pseudoConnexion" class="btn btn-default"> Connextion avec pseudo</button>
-			<button id="compteConnexion" class="btn btn-default"> Connextion avec compte</button>
-
+			<div class="form-group col-sm-10">
+				<button id="pseudoConnexion" class="btn btn-default"> Connexion avec pseudo</button>
+				<!-- <button id="compteConnexion" class="btn btn-default"> Connexion avec compte</button> -->
+			</div>
 		</div>	
 	</body>
 
@@ -89,7 +99,7 @@
 				$('#pseudoConnexion').show();
 			});
 
-			// quand on clique sur "Connextion avec pseudo"
+			// quand on clique sur "Connexion avec pseudo"
 			$('#pseudoConnexion').click( function () {
 				$('#pseudoConnexion').hide();
 				$('#compteDiv').hide();
