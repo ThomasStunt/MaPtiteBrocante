@@ -45,7 +45,12 @@ public class BrocanteResource {
         if (User.isAnonymous(currentUser)) {
             throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED).header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"Mon application\"").entity("Ressouce requires login.").build());
         }
-        //TODO brocante.setValide if admin
+        if(currentUser.getRank() > 0)
+            brocante.setValide(true);
+        else 
+        	brocante.setValide(false);
+        
+        
 		dao.insert(brocante);
 		return brocante;
 	}
