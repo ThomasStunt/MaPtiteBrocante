@@ -27,11 +27,12 @@ public interface BrocanteDao {
 			+ "heure_fin varchar(5), "
 			+ "salle varchar(255), "
 			+ "handicape boolean, "
-			+ "prixEmplacement float)")
+			+ "prixEmplacement float)"
+			+ "valide boolean" )
 	void createBrocanteTable();
 
-	@SqlUpdate("insert into brocante (libelle, nomOrganisateur, emailOrganisateur, telOrganisateur, pays, departement, ville, codePostal, rue, date, heure_debut, heure_fin, salle, handicape, prixEmplacement)"
-		+ " values (:libelle, :nomOrganisateur, :emailOrganisateur, :telOrganisateur, :pays, :departement, :ville, :codePostal, :rue, :date, :heure_debut, :heure_fin, :salle, :handicape, :prixEmplacement)")
+	@SqlUpdate("insert into brocante (libelle, nomOrganisateur, emailOrganisateur, telOrganisateur, pays, departement, ville, codePostal, rue, date, heure_debut, heure_fin, salle, handicape, prixEmplacement, valide)"
+		+ " values (:libelle, :nomOrganisateur, :emailOrganisateur, :telOrganisateur, :pays, :departement, :ville, :codePostal, :rue, :date, :heure_debut, :heure_fin, :salle, :handicape, :prixEmplacement, :valide)")
 	@GetGeneratedKeys
 	int insert(@BindBean() Brocante brocante);
 	
@@ -53,6 +54,10 @@ public interface BrocanteDao {
 	Brocante find(@Bind("id") int id);
 	
 	void close();
+	
+	@SqlQuery("select * from brocante order by id where valide = 1")
+	@RegisterMapperFactory(BeanMapperFactory.class)
+	List<Brocante> allUser();
 
 	
 }
