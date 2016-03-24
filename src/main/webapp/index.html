@@ -8,7 +8,7 @@
 		<script src="other/jquery-ui.min.js"></script>
 
 		<!-- GOOGLE MAP -->
-		<script src="https://maps.googleapis.com/maps/api/js"
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzBlA7Z8KWJX-5TUR6A5-4Qa19BfA2-_A"
         async defer></script>
 
         <!-- BOOTSTRAP -->
@@ -213,13 +213,64 @@
 						$("#outputAdd").hide();
 						$("#outputDel").hide();
 						$("#outputList").hide();
+						getInformationBraderie();
+					});
 
-						function initMap() {
+					var braderies = [];
+
+					function getInformationBraderie (){
+						$.ajax({
+							url: "/v1/brocante",
+							type: "GET",
+							dataType: "json",
+							success: function(json) {
+								if(json[0] == null) {
+									//a afficher il n'y a pas de braderie aux alentours
+								} else {
+									for(i in json) {
+										var info = [json[i].codePostal, json[i].ville, json[i].rue, json[i].date, json[i].heure_debut, json[i].heure_fin];
+										braderies.push(info);
+				    				}
+				    				utiliserLaListe();
+								}
+							},
+							error: function(xhr, status, errorThrown) {
+								alert("Something went wrong");
+								console.log("xhr: ", xhr);
+								console.log("status: ", status);
+								console.log("errorThrown: ", errorThrown);
+							}
+						});
+					}
+
+					function utiliserLaListe(){	
+						//console.log(braderies);
+						//for(var i; i < braderies.length; i++){
+							console.log(braderies[0]);
+							/*$.ajax({
+								url: "https://maps.googleapis.com/maps/api/geocode/json?address="+braderies[0].rue +",+" + braderies[0].ville,
+								type: "GET",
+								dataType: "json",
+								success: function(json) {
+									console.log(json);
+								},
+								error: function(xhr, status, errorThrown) {
+									alert("Something went wrong");
+									console.log("xhr: ", xhr);
+									console.log("status: ", status);
+									console.log("errorThrown: ", errorThrown);
+								}
+							});*/
+						//}
+					};
+
+					function initMap() {
 				        var mapDiv = document.getElementById('map');
 				        var map = new google.maps.Map(mapDiv, {
 				          center: {lat: 44.540, lng: -78.546},
 				          zoom: 15
-				        });
+			        	});
+
 				        var infoWindow = new google.maps.InfoWindow({map: map});
 
 						  // Try HTML5 geolocation.
@@ -240,13 +291,13 @@
 						    // Browser doesn't support Geolocation
 						    handleLocationError(false, infoWindow, map.getCenter());
 						}
-					}
+					};
 
 					function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 					 	infoWindow.setPosition(pos);
 					 	infoWindow.setContent(browserHasGeolocation ?'Error: The Geolocation service failed.' :'Error: Your browser doesn\'t support geolocation.');
 					}
-					});
+					
 				</script>
 			</div>	
 		</div>	
