@@ -71,7 +71,7 @@ public class BrocanteResource {
 
 	@GET
 	public List<Brocante> getAllBrocantesUser() {
-		return dao.allUser();
+		return dao.allBrocanteUser();
 	}
 
 	@DELETE

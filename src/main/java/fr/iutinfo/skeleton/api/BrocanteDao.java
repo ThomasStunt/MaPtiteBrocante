@@ -27,8 +27,8 @@ public interface BrocanteDao {
 			+ "heure_fin varchar(5), "
 			+ "salle varchar(255), "
 			+ "handicape boolean, "
-			+ "prixEmplacement float)"
-			+ "valide boolean" )
+			+ "prixEmplacement float, "
+			+ "valide boolean)" )
 	void createBrocanteTable();
 
 	@SqlUpdate("insert into brocante (libelle, nomOrganisateur, emailOrganisateur, telOrganisateur, pays, departement, ville, codePostal, rue, date, heure_debut, heure_fin, salle, handicape, prixEmplacement, valide)"
@@ -55,9 +55,9 @@ public interface BrocanteDao {
 	
 	void close();
 	
-	@SqlQuery("select * from brocante order by id where valide = 1")
+	@SqlQuery("select * from brocante where valide = 1 order by id")
 	@RegisterMapperFactory(BeanMapperFactory.class)
-	List<Brocante> allUser();
+	List<Brocante> allBrocanteUser();
 
 	
 }
