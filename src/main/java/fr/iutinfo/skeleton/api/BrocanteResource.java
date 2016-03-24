@@ -15,13 +15,18 @@ import java.util.Map;
 @Path("/brocante")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class BrocanteResource {
 
+public class BrocanteResource {
+	
+	private static Map<Integer, Brocante> brocantes = new HashMap<>();
 	private static BrocanteDao dao = BDDFactory.getDbi().open(BrocanteDao.class);
 	
     
    Logger logger = LoggerFactory.getLogger(BrocanteResource.class);
 
+   protected Brocante find(int id) {
+       return brocantes.get(id);
+   }
    
    public BrocanteResource() {
 		try {
@@ -35,6 +40,7 @@ public class BrocanteResource {
 	@POST
 	public Brocante createBrocante(Brocante brocante) {
        int id = dao.insert(brocante);
+       brocantes.put(id, brocante);
        brocante.setId(id);
        return brocante;
 	}
@@ -48,8 +54,41 @@ public class BrocanteResource {
 	@DELETE
 	@Path("/{id}")
 	public void deleteBrocante(@PathParam("id") int id) {
-		dao.deleteBrocante(id);
+		if (brocantes.containsKey(id)){
+			brocantes.remove(id);
+			dao.deleteBrocante(id);
+			Response.accepted().status(Status.ACCEPTED).build();
+		} else {
+			Response.accepted().status(Status.NOT_FOUND).build();
+		}
+		
 	}
+	
+	@PUT
+    @Path("{id}")
+    public Response updateBrocante(@PathParam("id") int id,
+                               Brocante brocante) {
+        Brocante oldBrocante = find(id);
+        logger.info("Should update Brocante with id: " + id + " (" + oldBrocante + ") to " + brocante);
+        if (brocante == null) {
+            throw new WebApplicationException(404);
+        }
+        oldBrocante.setLibelle(brocante.getLibelle());
+        oldBrocante.setDate(brocante.getDate());
+        oldBrocante.setCodePostal(brocante.getCodePostal());
+        oldBrocante.setDepartement(brocante.getDepartement());
+        oldBrocante.setEmailOrganisateur(brocante.getEmailOrganisateur());
+        oldBrocante.setHandicape(brocante.isHandicape());
+        oldBrocante.setHeure_debut(brocante.getHeure_debut());
+        oldBrocante.setHeure_fin(brocante.getHeure_fin());
+        oldBrocante.setNomOrganisateur(brocante.getNomOrganisateur());
+        oldBrocante.setRue(brocante.getRue());
+        oldBrocante.setPays(brocante.getPays());
+        oldBrocante.setPrixEmplacement(brocante.getPrixEmplacement());
+        oldBrocante.setTelOrganisateur(brocante.getTelOrganisateur());
+        oldBrocante.setSalle(brocante.getSalle());
+        return Response.status(200).entity(oldBrocante).build();
+    }
 	
 	/*@GET
 	@Path("/{name}")
@@ -98,20 +137,10 @@ public class BrocanteResource {
     protected Brocante find(int id) {
         return brocantes.get(id);
     }
-
-    @PUT
-    @Path("{id}")
-    public Response updateBrocante(@PathParam("id") int id,
-                               Brocante brocante) {
-        Brocante oldBrocante = find(id);
-        logger.info("Should update Brocante with id: " + id + " (" + oldBrocante + ") to " + brocante);
-        if (brocante == null) {
-            throw new WebApplicationException(404);
-        }
-        oldBrocante.setLibelle(brocante.getLibelle());
-        return Response.status(200).entity(oldBrocante).build();
-    }
-
+	*/
+	
+    
+    /*
     @GET
     @Path("/{name}")
     public Brocante getBrocante(@PathParam("name") String name) {

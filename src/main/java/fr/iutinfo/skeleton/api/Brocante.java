@@ -195,7 +195,5 @@ public class Brocante {
 		this.prixEmplacement = prixEmplacement;
 	}
 
-
-
 	
 }
