@@ -40,7 +40,6 @@
 				});
 			//});
 			deleteId = function(idx) {
-				alert(idx);
 				$.ajax({
 					url: "v1/brocante/"+idx,
 					type: "DELETE",
@@ -59,6 +58,12 @@
 	</div>
 	<div id="output">
 		
+	</div>
+	<div class="form-group col-sm-10">
+		<button id="retour" class="btn btn-default">Retour</button>
+		<script type="text/javascript">
+			$("#retour").click(function() {window.location.href="index.html";});
+		</script>
 	</div>
 </body>
 </html>
