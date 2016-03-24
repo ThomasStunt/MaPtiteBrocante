@@ -42,18 +42,29 @@
 					<button class="btn btn-default" id="inscripButton">S'inscrire</button>
 					<script type="text/javascript">
 						$("#inscripButton").click(function() {
-							$.ajax({
-								url: "/v1/userdb",
-								type: "POST",
-								contentType: "application/json",
-								data: JSON.stringify({
-									name: $("#pseudoInscrit").val(),
-									salt: $("#pwdInscrit").val()
-								}),
-								success: function(json) {
+
+
+						if($("#pseudoInscrit").val() != "") {
+						     $.ajax
+						     ({
+						       type: "GET",
+						       url: "/v1/userdb",
+						       dataType: 'json',
+						       beforeSend : function(req) {
+							req.setRequestHeader("Authorization", "Basic " + btoa($("#pseudoInscrit").val() + ":" + $("#pwdInscrit").val()));
+						       },
+						       success: function (data){
 									document.location.href="connexion.html"
-								}
+						       },
+						       error : function(jqXHR, textStatus, errorThrown) {
+						       			alert('error: ' + textStatus);
+						       		}
+						     });
+						     } else {
+						     $.getJSON(url, function(data) {
+						     	    afficheUser(data);
 							});
+						     }
 						});
 					</script>
 				</div>
