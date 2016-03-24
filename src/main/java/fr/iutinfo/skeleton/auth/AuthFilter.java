@@ -2,6 +2,7 @@ package fr.iutinfo.skeleton.auth;
 
 import fr.iutinfo.skeleton.api.BDDFactory;
 import fr.iutinfo.skeleton.api.User;
+import fr.iutinfo.skeleton.api.UserDBResource;
 import fr.iutinfo.skeleton.api.UserDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,9 @@ public class AuthFilter implements ContainerRequestFilter {
                 throw new WebApplicationException(Status.NOT_ACCEPTABLE);
             }
 
+            new UserDBResource();
             UserDao dao = BDDFactory.getDbi().open(UserDao.class);
+            
             User user = dao.findByName(loginPassword[0]);
             if(user != null && !user.isGoodPassword(loginPassword[1]) || user == null) {
                 throw new WebApplicationException(Status.UNAUTHORIZED);
