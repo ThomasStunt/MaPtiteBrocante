@@ -7,9 +7,6 @@
 
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 		<script src="http://crypto-js.googlecode.com/svn/tags/3.0.2/build/rollups/aes.js"></script>
-
-
-		<script src="./main.js"></script>
 	</head>	
 	<body>
 		<div class="container">
@@ -60,6 +57,7 @@
 									if(json.salt !== $("#pwdInscrit").val()) {
 										$("#output").html("Mauvaise combinaison login / pwd");
 									} else {
+										setCookie("name", $("#pseudoInscrit").val(), 1);
 										document.location.href="index.html";
 									}
 								},
@@ -69,6 +67,12 @@
 							});
 						}
 					});
+					function setCookie(cname, cvalue, exdays) {
+					    var d = new Date();
+					    d.setTime(d.getTime() + (exdays*60*60*30));
+					    var expires = "expires="+d.toUTCString();
+					    document.cookie = cname + "=" + cvalue + "; " + expires;
+					};
 				</script>
 				<div class="form-group col-sm-10" id="output">
 

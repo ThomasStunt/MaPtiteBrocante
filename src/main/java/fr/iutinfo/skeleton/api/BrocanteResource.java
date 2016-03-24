@@ -4,8 +4,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.Response.Status;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,18 +20,16 @@ import java.util.Map;
 @Consumes(MediaType.APPLICATION_JSON)
 
 public class BrocanteResource {
-	
-	private static Map<Integer, Brocante> brocantes = new HashMap<>();
-	private static BrocanteDao dao = BDDFactory.getDbi().open(BrocanteDao.class);
-	
-    
-   Logger logger = LoggerFactory.getLogger(BrocanteResource.class);
 
-   protected Brocante find(int id) {
-       return brocantes.get(id);
-   }
-   
-   public BrocanteResource() {
+	private static BrocanteDao dao = BDDFactory.getDbi().open(BrocanteDao.class);
+
+	Logger logger = LoggerFactory.getLogger(BrocanteResource.class);
+
+	protected Brocante find(int id) {
+		return dao.find(id);
+	}
+
+	public BrocanteResource() {
 		try {
 			System.out.println("Creating table");
 			dao.createBrocanteTable();
@@ -36,125 +37,93 @@ public class BrocanteResource {
 			System.out.println("Table déjà là !");
 		}
 	}
-	
+
 	@POST
-	public Brocante createBrocante(Brocante brocante) {
-       int id = dao.insert(brocante);
-       brocantes.put(id, brocante);
-       brocante.setId(id);
-       return brocante;
+	public Brocante createBrocante(Brocante brocante, @Context SecurityContext context) {
+		User currentUser = (User) context.getUserPrincipal();
+		logger.debug("Current User :" + currentUser.toString());
+		if (User.isAnonymous(currentUser)) {
+			throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)
+					.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"Mon application\"")
+					.entity("Ressouce requires login.").build());
+		}
+		if (currentUser.getRank() > 0)
+			brocante.setValide(true);
+		else
+			brocante.setValide(false);
+
+		dao.insert(brocante);
+		return brocante;
 	}
-	
 
 	@GET
-	public List<Brocante> getAllBrocantes() {
+	@Path("/all")
+	public List<Brocante> getAllBrocantes(@Context SecurityContext context) {
+		User currentUser = (User) context.getUserPrincipal();
+		logger.debug("Current User :" + currentUser.toString());
+		if (User.isAnonymous(currentUser) || currentUser.getRank() <= 0) {
+			throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)
+					.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"Mon application\"")
+					.entity("Ressouce requires login.").build());
+		}
 		return dao.all();
+	}
+
+	@GET
+	public List<Brocante> getAllBrocantesUser() {
+		return dao.allUser();
 	}
 
 	@DELETE
 	@Path("/{id}")
-	public void deleteBrocante(@PathParam("id") int id) {
-		if (brocantes.containsKey(id)){
-			brocantes.remove(id);
+	public void deleteBrocante(@PathParam("id") int id, @Context SecurityContext context) {
+		User currentUser = (User) context.getUserPrincipal();
+		logger.debug("Current User :" + currentUser.toString());
+		if (User.isAnonymous(currentUser) || currentUser.getRank() <= 0) {
+			throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)
+					.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"Mon application\"")
+					.entity("Ressouce requires login.").build());
+		}
+
+		try {
 			dao.deleteBrocante(id);
 			Response.accepted().status(Status.ACCEPTED).build();
-		} else {
+		} catch (Exception e) {
 			Response.accepted().status(Status.NOT_FOUND).build();
 		}
-		
 	}
-	
+
 	@PUT
-    @Path("{id}")
-    public Response updateBrocante(@PathParam("id") int id,
-                               Brocante brocante) {
-        Brocante oldBrocante = find(id);
-        logger.info("Should update Brocante with id: " + id + " (" + oldBrocante + ") to " + brocante);
-        if (brocante == null) {
-            throw new WebApplicationException(404);
-        }
-        oldBrocante.setLibelle(brocante.getLibelle());
-        oldBrocante.setDate(brocante.getDate());
-        oldBrocante.setCodePostal(brocante.getCodePostal());
-        oldBrocante.setDepartement(brocante.getDepartement());
-        oldBrocante.setEmailOrganisateur(brocante.getEmailOrganisateur());
-        oldBrocante.setHandicape(brocante.isHandicape());
-        oldBrocante.setHeure_debut(brocante.getHeure_debut());
-        oldBrocante.setHeure_fin(brocante.getHeure_fin());
-        oldBrocante.setNomOrganisateur(brocante.getNomOrganisateur());
-        oldBrocante.setRue(brocante.getRue());
-        oldBrocante.setPays(brocante.getPays());
-        oldBrocante.setPrixEmplacement(brocante.getPrixEmplacement());
-        oldBrocante.setTelOrganisateur(brocante.getTelOrganisateur());
-        oldBrocante.setSalle(brocante.getSalle());
-        return Response.status(200).entity(oldBrocante).build();
-    }
-	
-	/*@GET
-	@Path("/{name}")
-	public Brocante getBrocante(@PathParam("name") String name) {
-		Brocante brocante = dao.findByName(name);
-		if (brocante == null) {
-			throw new WebApplicationException(404);
+	@Path("{id}")
+	public Response updateBrocante(@PathParam("id") int id, Brocante brocante, @Context SecurityContext context) {
+		User currentUser = (User) context.getUserPrincipal();
+		logger.debug("Current User :" + currentUser.toString());
+		if (User.isAnonymous(currentUser) || currentUser.getRank() <= 0) {
+			throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)
+					.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"Mon application\"")
+					.entity("Ressouce requires login.").build());
 		}
-		return brocante;
-	}*/
 
-   
-	/*
-	 * Old resource
-	 * 
-	 */
-	
-	//private static Map<Integer, Brocante> brocantes = new HashMap<>();
-	
-   /* @POST
-    public Brocante createBrocante(Brocante brocante) {
-        int id = brocantes.size();
-        brocante.setId(id + 1);
-        brocantes.put(brocante.getId(), brocante);
-        return brocante;
-    }
-
-    @DELETE
-    @Path("{id}")
-    public Response deleteBrocante(@PathParam("id") Integer id) {
-        if (brocantes.containsKey(id)) {
-            return Response.accepted().status(Status.ACCEPTED).build();
-        }
-        return Response.accepted().status(Status.NOT_FOUND).build();
-    }
-
-    protected Brocante find(String libelle) {
-        for (Brocante Brocante : brocantes.values()) {
-            if (Brocante.getLibelle().equals(libelle)) {
-                return Brocante;
-            }
-        }
-        return null;
-    }
-
-    protected Brocante find(int id) {
-        return brocantes.get(id);
-    }
-	*/
-	
-    
-    /*
-    @GET
-    @Path("/{name}")
-    public Brocante getBrocante(@PathParam("name") String name) {
-        Brocante out = find(name);
-        if (out == null) {
-            throw new WebApplicationException(404);
-        }
-        return out;
-    }
-
-    @GET
-    public List<Brocante> getBrocantes(@DefaultValue("10") @QueryParam("limit") int limit) {
-    	logger.info("ok "+brocantes.values());
-        return new ArrayList<>(brocantes.values());
-    }
-*/
+		/*
+		 * Brocante oldBrocante = find(id); logger.info(
+		 * "Should update Brocante with id: " + id + " (" + oldBrocante +
+		 * ") to " + brocante); if (brocante == null) { throw new
+		 * WebApplicationException(404); }
+		 * oldBrocante.setLibelle(brocante.getLibelle());
+		 * oldBrocante.setDate(brocante.getDate());
+		 * oldBrocante.setCodePostal(brocante.getCodePostal());
+		 * oldBrocante.setDepartement(brocante.getDepartement());
+		 * oldBrocante.setEmailOrganisateur(brocante.getEmailOrganisateur());
+		 * oldBrocante.setHandicape(brocante.isHandicape());
+		 * oldBrocante.setHeure_debut(brocante.getHeure_debut());
+		 * oldBrocante.setHeure_fin(brocante.getHeure_fin());
+		 * oldBrocante.setNomOrganisateur(brocante.getNomOrganisateur());
+		 * oldBrocante.setRue(brocante.getRue());
+		 * oldBrocante.setPays(brocante.getPays());
+		 * oldBrocante.setPrixEmplacement(brocante.getPrixEmplacement());
+		 * oldBrocante.setTelOrganisateur(brocante.getTelOrganisateur());
+		 * oldBrocante.setSalle(brocante.getSalle());
+		 */
+		return Response.status(200).entity(brocante).build();
+	}
 }
