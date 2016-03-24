@@ -23,6 +23,7 @@ public class Brocante {
 	private String salle;
 	private boolean handicape;
 	private float prixEmplacement;
+	private boolean valide = false;
 	
 
 	public Brocante(){
@@ -193,6 +194,14 @@ public class Brocante {
 
 	public void setPrixEmplacement(float prixEmplacement) {
 		this.prixEmplacement = prixEmplacement;
+	}
+
+	public boolean isValide() {
+		return valide;
+	}
+
+	public void setValide(boolean valide) {
+		this.valide = valide;
 	}
 
 	

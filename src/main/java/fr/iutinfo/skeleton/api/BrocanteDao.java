@@ -43,7 +43,15 @@ public interface BrocanteDao {
 	@SqlUpdate("delete from brocante where id = :id")
 	@RegisterMapperFactory(BeanMapperFactory.class)
 	void deleteBrocante(@Bind("id") int id);
+	
+	/*@SqlUpdate("update brocante set libelle = :brocante.libelle where id = :id")
+	@RegisterMapperFactory(BeanMapperFactory.class)
+	void updateBrocante(@Bind("id") int id, @BindBean() Brocante brocante);*/
 
+	@SqlQuery("select * from brocante where id = :id")
+	@RegisterMapperFactory(BeanMapperFactory.class)
+	Brocante find(@Bind("id") int id);
+	
 	void close();
 
 	
