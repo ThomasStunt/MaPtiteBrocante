@@ -30,7 +30,7 @@ public interface BrocanteDao {
 			+ "prixEmplacement float)")
 	void createBrocanteTable();
 
-@SqlUpdate("insert into brocante (libelle, nomOrganisateur, emailOrganisateur, telOrganisateur, pays, departement, ville, codePostal, rue, date, heure_debut, heure_fin, salle, handicape, prixEmplacement)"
+	@SqlUpdate("insert into brocante (libelle, nomOrganisateur, emailOrganisateur, telOrganisateur, pays, departement, ville, codePostal, rue, date, heure_debut, heure_fin, salle, handicape, prixEmplacement)"
 		+ " values (:libelle, :nomOrganisateur, :emailOrganisateur, :telOrganisateur, :pays, :departement, :ville, :codePostal, :rue, :date, :heure_debut, :heure_fin, :salle, :handicape, :prixEmplacement)")
 	@GetGeneratedKeys
 	int insert(@BindBean() Brocante brocante);
