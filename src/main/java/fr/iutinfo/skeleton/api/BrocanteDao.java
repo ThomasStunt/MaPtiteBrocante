@@ -59,5 +59,9 @@ public interface BrocanteDao {
 	@RegisterMapperFactory(BeanMapperFactory.class)
 	List<Brocante> allBrocanteUser();
 
+	@SqlUpdate("update brocante set valide = 1 where id = :id")
+	@RegisterMapperFactory(BeanMapperFactory.class)
+	void valideBrocante(@Bind("id") int id);
+
 	
 }
