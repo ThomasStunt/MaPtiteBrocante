@@ -127,7 +127,6 @@ $(document).ready( function () {
 				return false;
 			}
 		}
-	
 		var dat = {
 			libelle : $("#inputLibelle").val(),
 
@@ -156,8 +155,8 @@ $(document).ready( function () {
 			url: uri,
 			type: "POST",
 			dataType: "json",
-				processData: false,
-				contentType: "application/json; charset=UTF-8",
+			processData: false,
+			contentType: "application/json; charset=UTF-8",
 			data: JSON.stringify(dat),
 			success: function(json) {
 				$("#output").html("Brocante ajoutée !");
@@ -218,7 +217,7 @@ $(document).ready( function () {
 	function showDelete () {
 		var res = "<div><table class=\"table table-striped table-bordered\" style=\"text-align:center\"><tr><td><b>Id brocante</b></td><td><b>Libelle brocante</b></td><td></td></tr><tr>";
 		$.ajax({
-			url: "v1/brocante",
+			url: "/v1/brocante",
 			type: "GET",
 			dataType: "json",
 			success: function(json) {

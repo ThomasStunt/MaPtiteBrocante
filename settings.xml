@@ -1,0 +1,21 @@
+<settings>
+  <proxies>
+
+   <proxy>
+      <id>lille1-proxy</id>
+      <active>true</active>
+      <protocol>http</protocol>
+      <host>cache.univ-lille1.fr</host>
+      <port>3128</port>
+    </proxy>
+
+   <proxy>
+      <id>lille1-proxy-secure</id>
+      <active>true</active>
+      <protocol>https</protocol>
+      <host>cache.univ-lille1.fr</host>
+      <port>3128</port>
+    </proxy>
+  </proxies>
+</settings>
+ 

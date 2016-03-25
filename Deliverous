@@ -1,6 +1,6 @@
 java:
-  image: tclavier/jersey-skeleton
+  image: thperrier/maptitebrocante
   ports:
-  - ip: A.X.Y.Z
-    container_port: 80
-    host_port: 8080
+  - ip: 51.254.167.72
+    container_port: 8080
+    host_port: 80
