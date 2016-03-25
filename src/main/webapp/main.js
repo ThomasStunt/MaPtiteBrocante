@@ -106,6 +106,17 @@ $(document).ready( function () {
 			}
 		}
 
+		var uri;
+
+		function findUri() {
+			var rank = current_user.rank;
+			if(rank > 0) {
+				uri = "/v1/brocante/all"
+			} else {
+				uri = "/v1/brocante"
+			}
+		}
+
 		var dat = {
 			libelle : $("#inputLibelle").val(),
 
@@ -131,11 +142,11 @@ $(document).ready( function () {
 		console.log(dat);
 
 		$.ajax({
-			url: "/v1/brocante",
+			url: findUri(),
 			type: "POST",
 			dataType: "json",
-				processData: false,
-				contentType: "application/json; charset=UTF-8",
+			processData: false,
+			contentType: "application/json; charset=UTF-8",
 			data: JSON.stringify(dat),
 			success: function(json) {
 				$("#output").html("Brocante ajoutée !");
@@ -196,7 +207,7 @@ $(document).ready( function () {
 	function showDelete () {
 		var res = "<div><table class=\"table table-striped table-bordered\" style=\"text-align:center\"><tr><td><b>Id brocante</b></td><td><b>Libelle brocante</b></td><td></td></tr><tr>";
 		$.ajax({
-			url: "v1/brocante",
+			url: "/v1/brocante",
 			type: "GET",
 			dataType: "json",
 			success: function(json) {
