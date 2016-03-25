@@ -1,33 +1,22 @@
 $(document).ready( function () {
-	showButtons();
 
 	//VARIABLE LOCAL
 	var braderies = [];
 	var current_user;
+	var uri = "/v1/brocante";
 
-	
-	// AFFICHAGE BOUTTON EN FONCTION DU STATUS DE L'USER
-	function showButtons(){
-		if(current_user != null){
-			$('#login_button').hide();
-			$('#addBraderie').show();
-			if(current_user.rank > 0)
-				$('#delBraderie').show();
-		} else {
-			$('#addBraderie').hide();
-			$('#delBraderie').hide();
-		}
-	}
+	getActualUser();
 
-	//	BOUTON LOGIN
-	$('#login_button').click(function(){
+	function getActualUser () {
 		$.ajax({
-			url: "/v1/userdb/login",
+			url: "/v1/login",
 			type: "GET",
 			dataType: "json",
 			success: function(json) {
-				current_user = json;
-				showButtons();
+				if(json != null){
+					current_user = json;
+					checkUser();
+				}
 			},
 			error: function(xhr, status, errorThrown) {
 				alert("Something went wrong");
@@ -35,9 +24,42 @@ $(document).ready( function () {
 				console.log("status: ", status);
 				console.log("errorThrown: ", errorThrown);
 			}
+		});
+	};
 
+	function checkUser () {
+		if(current_user != null){
+			$('#login_button').hide();	
+			$('#delBraderie').hide();
+			
+			$('#addBraderie').show();
+
+			if(current_user.rank != 0)
+				$('#delBraderie').show();
+		}else{
+			$('#addBraderie').hide();
+			$('#delBraderie').hide();
+		}
+	};
+	
+
+	//	BOUTON LOGIN
+	$('#login_button').click(function () {
+		$.ajax({
+			url: "/v1/userdb/login",
+			type: "GET",
+			dataType: "json",
+			success: function(json) {
+				current_user = json;
+				checkUser();
+			},
+			error: function(xhr, status, errorThrown) {
+				alert("Something went wrong");
+				console.log("xhr: ", xhr);
+				console.log("status: ", status);
+				console.log("errorThrown: ", errorThrown);
+			}
 		});			
-		
 	});
 
 	// LISTER LES BRADERIES
@@ -48,9 +70,9 @@ $(document).ready( function () {
 		$("#outputList").show();
 		var res = "";
 		$.ajax({
-			url: "/v1/brocante",
+			url: uri,
 			type: "GET",
-			dataType: "json",
+			dataType: "JSON",
 			success: function(json) {
 				if(json[0] == null) {
 					$("#outputList").html("Aucune brocante disponible.");
@@ -105,7 +127,7 @@ $(document).ready( function () {
 				return false;
 			}
 		}
-
+	
 		var dat = {
 			libelle : $("#inputLibelle").val(),
 
@@ -131,7 +153,7 @@ $(document).ready( function () {
 		console.log(dat);
 
 		$.ajax({
-			url: "/v1/brocante",
+			url: uri,
 			type: "POST",
 			dataType: "json",
 				processData: false,
@@ -206,10 +228,20 @@ $(document).ready( function () {
 					for(i in json) {
 						var id = json[i].id;
 						var lib = json[i].libelle;
-						res+="<td>"+id+"</td><td>"+lib+"</td><td>"+"<button class=\"glyphicon glyphicon-remove\" onclick=\"deleteId("+id+")\">"+"</button></tr><tr>";
+						res+="<td>"+id+"</td><td>"+lib+"</td><td>"+"<button class=\"glyphicon glyphicon-remove\" id='delete-" + id + "' type='button'\"></button></tr><tr>";
+						$("#delete-" + id).text("sjfdbsd");
+						$("#delete-" + id).click(function () {
+							deleteId(id);
+						});
 					}
 					res+="</tr></table></div>";
 					$("#outputDel").html(res);
+					for(i in json) {
+						var id = json[i].id;
+						$("#delete-" + id).click(function () {
+							deleteId(id);
+						});
+					}
 				}
 			}
 		});
@@ -246,8 +278,9 @@ $(document).ready( function () {
 		//console.log(braderies);
 		//for(var i; i < braderies.length; i++){
 			//console.log(braderies[0]);
+			console.log(braderies[0]);
 			$.ajax({
-				url: "https://maps.googleapis.com/maps/api/geocode/json?address="+braderies[0].rue +",+" + braderies[0].ville,
+				url: "https://maps.googleapis.com/maps/api/geocode/json?address="+braderies[0].rue +",+" + braderies[0].ville + ",+"+braderies[0].codePostal,
 				type: "GET",
 				dataType: "json",
 				success: function(json) {
