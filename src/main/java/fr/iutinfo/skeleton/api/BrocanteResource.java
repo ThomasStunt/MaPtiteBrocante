@@ -55,7 +55,7 @@ public class BrocanteResource {
 
 	@GET
 	@Path("/all")
-	@RolesAllowed({"user"})
+	@RolesAllowed({"user","admin"})
 	public List<Brocante> getAllBrocantes(@Context SecurityContext context) {
 		User currentUser = (User) context.getUserPrincipal();
 		logger.debug("Current User :" + currentUser.toString());
