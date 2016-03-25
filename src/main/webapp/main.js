@@ -4,6 +4,7 @@ $(document).ready( function () {
 	var braderies = [];
 	var current_user;
 	var uri = "/v1/brocante";
+	var hidden = true;
 
 	getActualUser();
 
@@ -31,14 +32,19 @@ $(document).ready( function () {
 		if(current_user != null){
 			$('#login_button').hide();	
 			$('#delBraderie').hide();
-			
+			$('#listValid').hide();
+			$('#gestionBrad').hide();
 			$('#addBraderie').show();
 
-			if(current_user.rank != 0)
-				$('#delBraderie').show();
+			if(current_user.rank > 0) {
+				$('#addBraderie').hide();
+				$("#gestionBrad").show();
+			}
+			
 		}else{
-			$('#addBraderie').hide();
+			$('#addBraderie').show();
 			$('#delBraderie').hide();
+			$("#gestionBrad").hide();
 		}
 	};
 	
@@ -112,10 +118,31 @@ $(document).ready( function () {
 	// AFFICHER FORMULAIRE AJOUT
 	$("#addBraderie").click(function() {
 		$("#outputAdd").show();
-
+		$('#outputValid').hide();
 		$("#map").hide();
 		$("#outputDel").hide();
 		$("#outputList").hide();
+	});
+
+	$("#gestionBrad").click(function() {
+		if(!hidden) {
+			$("#hrBis").hide();
+			$("#addBraderie").hide();
+			$("#delBraderie").hide();
+			$("#listValid").hide();
+			$("#output").hide();
+			$("#outputAdd").hide();
+			$("#outputList").hide();
+			$("#outputDel").hide();
+			$("#outputValid").hide();
+			hidden = true;
+		} else {
+			$("#hrBis").show();
+			$("#addBraderie").show();
+			$("#delBraderie").show();
+			$("#listValid").show();
+			hidden = false;
+		}
 	});
 
 	// AJOUTER UNE BRADERIE
@@ -327,5 +354,70 @@ $(document).ready( function () {
 	function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 	 	infoWindow.setPosition(pos);
 	 	infoWindow.setContent(browserHasGeolocation ?'Error: The Geolocation service failed.' :'Error: Your browser doesn\'t support geolocation.');
+	}
+
+	// BOUTON LISTE BROCANTES NON VALIDEES
+	$('#listValid').click(function() {
+		$("#outputAdd").hide();
+		$("#outputDel").hide();
+		$("#outputList").hide();
+		$("#map").hide();
+		$("#outputValid").show();
+		showValid();
+	});
+
+	function showValid() {		
+		var res = "<div><table class=\"table table-striped table-bordered\" style=\"text-align:center\"><tr><td><b>Id brocante</b></td><td><b>Libelle brocante</b></td><td></td></tr><tr>";
+		$.ajax({
+			url: "/v1/brocante",
+			type: "GET",
+			dataType: "json",
+			success: function(json) {
+				if(json[0] == null) {
+					$('#output').html("Aucune brocante disponible");
+				} else {
+					for(i in json) {
+						var id = json[i].id;
+						var lib = json[i].libelle;
+						var valid = json[i].valide;
+						if(valid) 
+							res+="<td>"+id+"</td><td>"+lib+"</td><td>"+"<button class=\"glyphicon glyphicon-ok\" id='valid-" + id + "' type='button'\"></button></tr><tr>";
+					}
+					res+="</tr></table></div>";
+					$("#outputValid").html(res);
+					for(i in json) {
+						var id = json[i].id;
+						$("#valid-" + id).click(function () {
+							validId(id);
+						});
+					}
+				}
+			},
+			error: function(xhr, status, errorThrown) {
+				alert("Something went wrong");
+				console.log("xhr: ", xhr);
+				console.log("status: ", status);
+				console.log("errorThrown: ", errorThrown);
+			}
+		});
+
+		function validId(idx) {
+			uri="/v1/valider/"+idx
+			$.ajax({
+				url: uri,
+				type: "GET",
+				dataType: "json",
+				success: function(json) {
+					showValid();
+				},
+				error: function(xhr, status, errorThrown) {
+					alert("Something went wrong");
+					console.log("xhr: ", xhr);
+					console.log("status: ", status);
+					console.log("errorThrown: ", errorThrown);
+				}				
+			});
+			uri="/v1/brocante";
+		};
 	}
 });

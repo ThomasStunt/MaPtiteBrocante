@@ -38,15 +38,20 @@
 			<div style="text-align:center">
 				<button id="login_button" class="btn btn-default">Login</button>
 				<button id="listBraderie" class="btn btn-default">Lister les braderies</button>
-				<button id="addBraderie" class="btn btn-default">Ajouter une braderie</button>
-				<button id="delBraderie" class="btn btn-default">Supprimer une braderie</button>
 				<button id="showMap" class="btn btn-default">Afficher les braderies aux alentours</button>
+				<button id="gestionBrad" class="btn btn-default">Gérer les braderies</button>
 			</div>
 			<hr>
+			<div style="text-align:center">
+				<button id="addBraderie" class="btn btn-default">Ajouter une braderie</button>
+				<button id="delBraderie" class="btn btn-default">Supprimer une braderie</button>
+				<button id="listValid" class="btn btn-default">Brocantes à valider</button>
+			</div>
+			<hr id="hrBis" style="display:none">
 
 			<!-- div de google map -->
+			<br>
 			<div id="map" style="display:none"></div>
-
 			<!--  Bouton lister les braderies-->
 			<div id="outputList"></div>
 			
@@ -140,7 +145,8 @@
 				</div>
 			</div>
 
-			<div id="outputDel" style="display:none"></div>	
+			<div id="outputDel" style="display:none"></div>
+			<div id="outputValid" style="display:non"></div>	
 		</div>
 		<script src="./main.js"></script>	
 	</body>	
