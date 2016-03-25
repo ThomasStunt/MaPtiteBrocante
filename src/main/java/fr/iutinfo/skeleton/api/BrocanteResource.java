@@ -40,7 +40,7 @@ public class BrocanteResource {
 	}
 
 	@POST
-	@RolesAllowed({"user"})
+	@RolesAllowed({"user","admin"})
 	public Brocante createBrocante(Brocante brocante, @Context SecurityContext context) {
 		User currentUser = (User) context.getUserPrincipal();
 		logger.debug("Current User :" + currentUser.toString());
