@@ -5,6 +5,7 @@ $(document).ready( function () {
 	var current_user;
 	var uri = "/v1/brocante";
 	var hidden = true;
+	var mapHidden = true;
 
 	getActualUser();
 
@@ -74,6 +75,7 @@ $(document).ready( function () {
 		$("#outputDel").hide();
 		$("#map").hide();
 		$("#outputList").show();
+		$("#outputValid").hide();
 		var res = "";
 		$.ajax({
 			url: uri,
@@ -105,14 +107,22 @@ $(document).ready( function () {
 
 	// BOUTON AFFICHER LA CARTE
 	$('#showMap').click( function () {
-		$("#map").show();
-		initializeMap();
+		if(mapHidden) {
+			$("#map").show();
+			initializeMap();
 
-		$("#outputAdd").hide();
-		$("#outputDel").hide();
-		$("#outputList").hide();
+			$("#outputAdd").hide();
+			$("#outputDel").hide();
+			$("#outputList").hide();
+			$("#outputValid").hide();
 
-		getInformationBraderie();
+			getInformationBraderie();
+
+			mapHidden = false;
+		} else {
+			$("#map").hide();
+			mapHidden = true;
+		}
 	});
 
 	// AFFICHER FORMULAIRE AJOUT
@@ -219,6 +229,7 @@ $(document).ready( function () {
 		$("#outputDel").show();
 		$("#outputList").hide();
 		$("#map").hide();
+		$("#outputValid").hide();
 		showDelete();
 	});
 
@@ -249,7 +260,7 @@ $(document).ready( function () {
 			dataType: "json",
 			success: function(json) {
 				if(json[0] == null) {
-					$("#outputDel").html("Aucune brocante disponible.");
+					$("#outputDel").html("Aucune brocante à supprimer.");
 				} else {
 					for(i in json) {
 						var id = json[i].id;
@@ -367,23 +378,27 @@ $(document).ready( function () {
 	});
 
 	function showValid() {		
-		var res = "<div><table class=\"table table-striped table-bordered\" style=\"text-align:center\"><tr><td><b>Id brocante</b></td><td><b>Libelle brocante</b></td><td></td></tr><tr>";
 		$.ajax({
 			url: "/v1/brocante",
 			type: "GET",
 			dataType: "json",
 			success: function(json) {
 				if(json[0] == null) {
-					$('#output').html("Aucune brocante disponible");
+					$('#outputValid').html("Aucune brocante à valider");
 				} else {
 					for(i in json) {
 						var id = json[i].id;
 						var lib = json[i].libelle;
 						var valid = json[i].valide;
-						if(valid) 
+						var res;
+						if(valid == "false") {
+							res = "<div><table class=\"table table-striped table-bordered\" style=\"text-align:center\"><tr><td><b>Id brocante</b></td><td><b>Libelle brocante</b></td><td></td></tr><tr>";
 							res+="<td>"+id+"</td><td>"+lib+"</td><td>"+"<button class=\"glyphicon glyphicon-ok\" id='valid-" + id + "' type='button'\"></button></tr><tr>";
+							res+="</tr></table></div>";
+						} else {
+
+						}
 					}
-					res+="</tr></table></div>";
 					$("#outputValid").html(res);
 					for(i in json) {
 						var id = json[i].id;
@@ -402,7 +417,7 @@ $(document).ready( function () {
 		});
 
 		function validId(idx) {
-			uri="/v1/valider/"+idx
+			uri="/v1/brocante/valider/"+idx
 			$.ajax({
 				url: uri,
 				type: "GET",
