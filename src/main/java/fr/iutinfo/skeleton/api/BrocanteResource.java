@@ -66,6 +66,20 @@ public class BrocanteResource {
 		}
 		return dao.all();
 	}
+	
+	@GET
+	@Path("/valider/{id}")
+	@RolesAllowed({"user","admin"})
+	public void valideBrocante(@PathParam("id") int id, @Context SecurityContext context) {
+		User currentUser = (User) context.getUserPrincipal();
+		logger.debug("Current User :" + currentUser.toString());
+		if (User.isAnonymous(currentUser) || currentUser.getRank() <= 0) {
+			throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)
+					.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"Mon application\"")
+					.entity("Ressouce requires login.").build());
+		}
+		dao.valideBrocante(id);
+	}
 
 	@GET
 	public List<Brocante> getAllBrocantesUser() {
@@ -77,7 +91,7 @@ public class BrocanteResource {
 	//@RolesAllowed({"user"})
 	public void deleteBrocante(@PathParam("id") int id, @Context SecurityContext context) {
 		User currentUser = (User) context.getUserPrincipal();
-		logger.debug("Current User :" + currentUser.toString());
+		logger.debug("Current User  :" + currentUser.toString());
 		if (currentUser.getRank() <= 0) {
 			throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)
 					.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"Mon application\"")
