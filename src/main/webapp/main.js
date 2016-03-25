@@ -4,6 +4,7 @@ $(document).ready( function () {
 	var braderies = [];
 	var current_user;
 	var uri = "/v1/brocante";
+	var map;
 	var hidden = true;
 	var mapHidden = true;
 
@@ -294,6 +295,7 @@ $(document).ready( function () {
 				if(json[0] == null) {
 					//a afficher il n'y a pas de braderie aux alentours
 				} else {
+					braderies = [];
 					for(i in json) {
 						var info = [json[i].codePostal, json[i].ville, json[i].rue, json[i].date, json[i].heure_debut, json[i].heure_fin];
 						braderies.push(info);
@@ -308,35 +310,48 @@ $(document).ready( function () {
 				console.log("errorThrown: ", errorThrown);
 			}
 		});
+	};
+
+	function trimSplitJoin(chaine){
+		return $.trim(chaine).split(' ').join('+');
 	}
 
 	// RECUPERER LA LATITUDE ET LA LONGITUDE D'UNE BRADERIE
 	function getGeolocalisations(){	
-		//console.log(braderies);
-		//for(var i; i < braderies.length; i++){
-			//console.log(braderies[0]);
-			console.log(braderies[0]);
+		
+		for(var i in braderies){
 			$.ajax({
-				url: "https://maps.googleapis.com/maps/api/geocode/json?address="+braderies[0].rue +",+" + braderies[0].ville + ",+"+braderies[0].codePostal,
+				url: trimSplitJoin("https://maps.googleapis.com/maps/api/geocode/json?address="+ braderies[i][2] +",+" + braderies[i][0] + "+"+braderies[i][1]+",+"+"France"),
 				type: "GET",
 				dataType: "json",
 				success: function(json) {
-					console.log(json);
+					addMarker(json);
 				},
 				error: function(xhr, status, errorThrown) {
+
 					alert("Something went wrong");
 					console.log("xhr: ", xhr);
 					console.log("status: ", status);
 					console.log("errorThrown: ", errorThrown);
 				}
 			});
-		//}
+		}
+	};
+
+	function addMarker(json){
+		var mapDiv = document.getElementById('map');
+		var myLatLng = {lat: json.results[0].geometry.location.lat, lng: json.results[0].geometry.location.lng};
+		var marker = new google.maps.Marker({
+		    map: map,
+		    position: myLatLng,
+		    title: 'Hello World!'
+		  });
 	};
 
 	// INITIALISE LA MAP
 	function initializeMap() {
 		var mapDiv = document.getElementById('map');
-		var map = new google.maps.Map(mapDiv, {
+		map = new google.maps.Map(mapDiv, {
 		  center: {lat: 44.540, lng: -78.546},
 		  zoom: 15
 		});
