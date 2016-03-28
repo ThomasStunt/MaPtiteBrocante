@@ -24,7 +24,7 @@
 			 	background-color: #CCC;
 		      	}
 	    	</style>
-	</head>	
+	</head>
 	<body>
 		<div class="container">
 
@@ -36,27 +36,26 @@
 
 			<!-- différent boutons -->
 			<div style="text-align:center">
-				<button id="login_button" class="btn btn-default">Login</button>
-				<button id="listBraderie" class="btn btn-default">Lister les braderies</button>
-				<button id="showMap" class="btn btn-default">Afficher les braderies aux alentours</button>
-				<button id="gestionBrad" class="btn btn-default">Gérer les braderies</button>
-			</div>
-			<hr>
-			<div style="text-align:center">
-				<button id="addBraderie" class="btn btn-default">Ajouter une braderie</button>
-				<button id="delBraderie" class="btn btn-default">Supprimer une braderie</button>
-				<button id="listValid" class="btn btn-default">Brocantes à valider</button>
+				<button id="login-button" class="btn btn-default anonymous-button">Login</button>
+				<button id="braderie-list-button" class="btn btn-default">Lister les braderies</button>
+				<button id="map-button" class="btn btn-default">Afficher les braderies aux alentours</button>
+				<button id="braderie-modify-button" class="btn btn-default user-button">Proposer une braderie</button>
 			</div>
 			<hr id="hrBis" style="display:none">
-
-			<!-- div de google map -->
 			<br>
-			<div id="map" style="display:none"></div>
-			<!--  Bouton lister les braderies-->
-			<div id="outputList"></div>
-			
-			<!-- Bouton ajouter une braderie -->
-			<div id="outputAdd" style="display:none;">
+
+			<!-- Vue Formulaire de connexion -->
+			<div id="login-form" class="col-sm-10 view">
+					<input type="text" id="userlogin" placeholder="Login"/>
+					<input type="password" id="passwdlogin" placeholder="Password"/>
+					<button id="login-form-button">Connexion</button>
+			</div>
+
+			<!-- Vue lister les braderies-->
+			<div id="braderie-list" class="view"></div>
+
+			<!-- Vue ajouter/modifier une braderie -->
+			<div id="braderie-form" class="view" style="display:none;">
 				<!-- NomBrocante -->
 				<div class="form-group col-sm-10">
 					<label for="inputNomBrocante">Nom de la brocante :</label>
@@ -145,9 +144,11 @@
 				</div>
 			</div>
 
-			<div id="outputDel" style="display:none"></div>
-			<div id="outputValid" style="display:none"></div>	
+			<!-- Vue google map -->
+			<div id="map" class="view" style="display:none"></div>
+
+
 		</div>
-		<script src="./main.js"></script>	
-	</body>	
+		<script src="./main.js"></script>
+	</body>
 </html>
