@@ -14,7 +14,6 @@ public interface ArticleDao {
 	
 	@SqlUpdate("create table articles "
 			+ "(id integer primary key autoincrement,"
-			+ " libelle varchar(255),"
 			+ " titre varchar(255),"
 			+ " theme varchar(255),"
 			+ " texte text)")
@@ -32,8 +31,8 @@ public interface ArticleDao {
 	@RegisterMapperFactory(BeanMapperFactory.class)
 	Article find(@Bind("id") int id);
 	
-	@SqlUpdate("insert into articles (libelle, titre, theme, texte)"
-			+ " values (:libelle, :titre, :theme, :texte)")
+	@SqlUpdate("insert into articles (titre, theme, texte)"
+			+ " values (:titre, :theme, :texte)")
 	@GetGeneratedKeys
 	int insert(@BindBean() Article article);
 	

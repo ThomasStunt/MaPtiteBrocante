@@ -6,6 +6,10 @@ public class Article {
 	private Theme theme;
 	private String texte;
 	
+	public Article(){
+		
+	}
+	
 	public Article(int id, String titre, Theme theme, String texte){
 		this.setId(id);
 		this.setTitre(titre);

@@ -5,9 +5,13 @@ public class Theme {
 	private int id;
 	private String libelle;
 	
-	public Theme(int id, String lebelle){
+	public Theme(){
+		
+	}
+	
+	public Theme(int id, String libelle){
 		this.setId(id);
-		this.setLibelle(lebelle);
+		this.setLibelle(libelle);
 	}
 	
 	public int getId() {
