@@ -278,6 +278,7 @@ function modifyBraderie(brad) {
 				setSecureHeader(req);
 			},
 			success: function(json) {
+				alert("succes");
 				$("#output").html("Brocante modifiée !");
 			},
 			error: function(xhr, status, errorThrown) {
@@ -296,6 +297,8 @@ function modifyBraderie(brad) {
 **/
 $("#braderie-modify-button").click(function() {
 	changeView("#braderie-form");
+	$('#submit').show();
+	$('#modif').hide();
 });
 
 function checker(handicY, handicN) {
