@@ -1,6 +1,7 @@
-//VARIABLE LOCAL
+//VARIABLE GLOBAL
 var current_user;
 var current_passwd;
+var current_position;
 
 var uri = "/v1/brocante";
 var map;
@@ -84,15 +85,16 @@ $(view).show();
 Change la vue pour afficher le formulaire de connexion
 **/
 $('#login-button').click(function () {
-changeView("#login-form");
+	$('#tableMap').hide();
+	changeView("#login-form");
 });
 
 /**
 Log l'utilisateur quand il rempli le formulaire
 **/
 $('#login-form-button').click(function(){
-current_user = getActualUser();
-checkUser();
+	current_user = getActualUser();
+	checkUser();
 });
 
 // BRADERIE PART
@@ -102,6 +104,7 @@ Bouton lister braderies
 Liste les braderies et ajoute des options en fonction du role de l'utilisateur
 **/
 $('#braderie-list-button').click( function () {
+	$('#tableMap').hide();
 var view = "#braderie-list";
 changeView(view);
 var isAdmin = (current_user != null && current_user.rank > 0);
@@ -202,6 +205,7 @@ function validateOrDeleteBraderie(idBraderie, validate){
 	Affiche le formulaire d'une braderie
 **/
 $("#braderie-modify-button").click(function() {
+	$('#tableMap').hide();
 	changeView("#braderie-form");
 });
 
@@ -262,9 +266,9 @@ $.ajax({
 
 // BOUTON AFFICHER LA CARTE
 $('#map-button').click( function () {
+	changeView("#map");
 	initializeMap();
 	getInformationBraderie();
-	changeView("#map");
 });
 
 
@@ -280,7 +284,15 @@ $.ajax({
 		} else {
 			var braderies = [];
 			for(i in json) {
-				var info = [json[i].codePostal, json[i].ville, json[i].rue, json[i].date, json[i].heure_debut, json[i].heure_fin];
+				var info = {
+					'codepostal' : json[i].codePostal,
+					'ville' : json[i].ville,
+					'rue' : json[i].rue,
+					'date' : json[i].date,
+					'heureDeb' : json[i].heure_debut,
+					'heureFin' : json[i].heure_fin,
+					'name' : json[i].libelle
+				};
 				braderies.push(info);
 				}
 				getGeolocalisations(braderies);
@@ -296,67 +308,110 @@ $.ajax({
 };
 
 function trimSplitJoin(chaine){
-return $.trim(chaine).split(' ').join('+');
+	return $.trim(chaine).split(' ').join('+');
 }
 
 // RECUPERER LA LATITUDE ET LA LONGITUDE D'UNE BRADERIE
 function getGeolocalisations(braderies){
+	for(var i in braderies){
+		$.ajax({
+			url: trimSplitJoin("https://maps.googleapis.com/maps/api/geocode/json?address="+ braderies[i].rue +",+" + braderies[i].codePostal + "+"+braderies[i].ville+",+"+"France"),
+			type: "GET",
+			dataType: "json",
+			success: function(json) {
+				addMarker(json, braderies[i]);
+			},
+			error: function(xhr, status, errorThrown) {
 
-for(var i in braderies){
-	$.ajax({
-		url: trimSplitJoin("https://maps.googleapis.com/maps/api/geocode/json?address="+ braderies[i][2] +",+" + braderies[i][0] + "+"+braderies[i][1]+",+"+"France"),
-		type: "GET",
-		dataType: "json",
-		success: function(json) {
-			addMarker(json);
-		},
-		error: function(xhr, status, errorThrown) {
-
-			alert("Something went wrong");
-			console.log("xhr: ", xhr);
-			console.log("status: ", status);
-			console.log("errorThrown: ", errorThrown);
-		}
-	});
-}
+				alert("Something went wrong");
+				console.log("xhr: ", xhr);
+				console.log("status: ", status);
+				console.log("errorThrown: ", errorThrown);
+			}
+		});
+	}
 };
 
-function addMarker(json){
-var mapDiv = document.getElementById('map');
-var myLatLng = {lat: json.results[0].geometry.location.lat, lng: json.results[0].geometry.location.lng};
-var marker = new google.maps.Marker({
-    map: map,
-    position: myLatLng,
-    title: 'Hello World!'
-  });
+function addMarker(json, braderies){
+
+	var mapDiv = document.getElementById('map');
+	var braderiePosition = {lat: json.results[0].geometry.location.lat, lng: json.results[0].geometry.location.lng};
+	var marker = new google.maps.Marker({
+	    map: map,
+	    position: braderiePosition,
+	    title: 'Afficher les informations'
+  	});
+
+  	marker.addListener('click', function () {
+  		var origin = new google.maps.LatLng(current_position.lat, current_position.lng);
+    	var destination = new google.maps.LatLng(braderiePosition.lat, braderiePosition.lng);
+
+    	var directionsService = new google.maps.DirectionsService();
+
+    	directionsService.route({origin:origin, destination:destination, travelMode:google.maps.TravelMode.DRIVING},function(result, status){
+    		if(status == google.maps.DirectionsStatus.OK){
+    			addInformation(braderies,result.routes[0].legs[0].distance.value / 1000,origin,destination);
+    		}
+    	});
+  	});
+};
+
+function addInformation(braderie, distance, origin, destination){
+	$('#tableMap').show();
+	$('#tableMap #name').html(braderie.name);
+    $('#tableMap #distance').html(distance + " km");
+    $('#tableMap #heureDeb').html(braderie.heureDeb);
+    $('#tableMap #heureFin').html(braderie.heureFin);
+
+	$('#tableMap #itineraire').click( function () {
+		var request = {
+        	origin      : origin,
+        	destination : destination,
+        	travelMode  : google.maps.DirectionsTravelMode.DRIVING
+    	}
+
+    	var direction = new google.maps.DirectionsRenderer({
+		    map   : map 
+		});
+
+    	var directionsService = new google.maps.DirectionsService();
+
+    	directionsService.route(request, function(response, status){
+        	if(status == google.maps.DirectionsStatus.OK){
+            	direction.setDirections(response);
+        	}
+    	});
+
+	});
 };
 
 // INITIALISE LA MAP
 function initializeMap() {
-var mapDiv = document.getElementById('map');
-map = new google.maps.Map(mapDiv, {
-  center: {lat: 44.540, lng: -78.546},
-  zoom: 15
-});
+	var mapDiv = document.getElementById('map');
+	map = new google.maps.Map(mapDiv, {
+	  center: {lat: 44.540, lng: -78.546},
+	  zoom: 12
+	});
 
-    var infoWindow = new google.maps.InfoWindow({map: map});
+	var infoWindow = new google.maps.InfoWindow({map: map});
   // Try HTML5 geolocation.
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-     	var pos = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-     };
-    infoWindow.setPosition(pos);
-    infoWindow.setContent('Vous êtes ici.');
-    map.setCenter(pos);
-    }, function() {
-      handleLocationError(true, infoWindow, map.getCenter());
-    });
-} else {
-    // Browser doesn't support Geolocation
-    handleLocationError(false, infoWindow, map.getCenter());
-}
+	if (navigator.geolocation) {
+	    navigator.geolocation.getCurrentPosition(function(position) {
+	     var pos = {
+	        lat: position.coords.latitude,
+	        lng: position.coords.longitude
+	     };
+	    current_position=pos;
+	    infoWindow.setPosition(pos);
+	    infoWindow.setContent('Vous êtes ici.');
+	    map.setCenter(pos);
+	    }, function() {
+	      handleLocationError(true, infoWindow, map.getCenter());
+	    });
+	} else {
+	    // Browser doesn't support Geolocation
+	    handleLocationError(false, infoWindow, map.getCenter());
+	}
 };
 
 // EXCEPTION DE L'INITALISATION DE LA MAP

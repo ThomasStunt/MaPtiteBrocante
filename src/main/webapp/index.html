@@ -8,7 +8,7 @@
 		<script src="other/jquery-ui.min.js"></script>
 
 		<!-- GOOGLE MAP -->
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzBlA7Z8KWJX-5TUR6A5-4Qa19BfA2-_A"
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzBlA7Z8KWJX-5TUR6A5-4Qa19BfA2-_A&libraries=geometry"
         async defer></script>
 
         <!-- BOOTSTRAP -->
@@ -18,10 +18,10 @@
 		<style>
 		      	#map {
 		      		margin-left: auto;
-	  			margin-right: auto;
-				width: 1000px;
-			 	height: 500px;
-			 	background-color: #CCC;
+		  			margin-right: auto;
+					width: 1000px;
+				 	height: 500px;
+				 	background-color: #CCC;
 		      	}
 	    	</style>
 	</head>
@@ -144,11 +144,15 @@
 				</div>
 			</div>
 
-			<!-- Vue google map -->
+			<!-- Vue google map avec table-->
+			<div id="information"><br/>
+				<table id="tableMap" class="table table-hover" style="display:none">
+					<tr><td>Nom de la braderie</td><td>heure début</td><td>heure fin</td><td>Distance</td><td>Itineraire</td></tr>
+					<tr><td id="name"></td><td id="heureDeb"></td><td id="heureFin"></td><td id="distance"></td><td><button id="itineraire">Itineraire</button></td></tr>
+				</table>
+			</div>
 			<div id="map" class="view" style="display:none"></div>
-
-
-		</div>
-		<script src="./main.js"></script>
+					
+			<script src="./main.js"></script>
 	</body>
 </html>
