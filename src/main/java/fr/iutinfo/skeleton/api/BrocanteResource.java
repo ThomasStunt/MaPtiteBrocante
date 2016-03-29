@@ -29,6 +29,7 @@ public class BrocanteResource {
 	protected Brocante find(int id) {
 		return dao.find(id);
 	}
+	
 
 	public BrocanteResource() {
 		try {
@@ -48,7 +49,8 @@ public class BrocanteResource {
 			brocante.setValide(true);
 		else
 			brocante.setValide(false);
-
+		
+		brocante.sanitize();
 		dao.insert(brocante);
 		return brocante;
 	}
@@ -117,27 +119,8 @@ public class BrocanteResource {
 					.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"Mon application\"")
 					.entity("Ressouce requires login.").build());
 		}
-
-		/*
-		 * Brocante oldBrocante = find(id); logger.info(
-		 * "Should update Brocante with id: " + id + " (" + oldBrocante +
-		 * ") to " + brocante); if (brocante == null) { throw new
-		 * WebApplicationException(404); }
-		 * oldBrocante.setLibelle(brocante.getLibelle());
-		 * oldBrocante.setDate(brocante.getDate());
-		 * oldBrocante.setCodePostal(brocante.getCodePostal());
-		 * oldBrocante.setDepartement(brocante.getDepartement());
-		 * oldBrocante.setEmailOrganisateur(brocante.getEmailOrganisateur());
-		 * oldBrocante.setHandicape(brocante.isHandicape());
-		 * oldBrocante.setHeure_debut(brocante.getHeure_debut());
-		 * oldBrocante.setHeure_fin(brocante.getHeure_fin());
-		 * oldBrocante.setNomOrganisateur(brocante.getNomOrganisateur());
-		 * oldBrocante.setRue(brocante.getRue());
-		 * oldBrocante.setPays(brocante.getPays());
-		 * oldBrocante.setPrixEmplacement(brocante.getPrixEmplacement());
-		 * oldBrocante.setTelOrganisateur(brocante.getTelOrganisateur());
-		 * oldBrocante.setSalle(brocante.getSalle());
-		 */
+		brocante.sanitize();
+		dao.updateBrocante(id, brocante);
 		return Response.status(200).entity(brocante).build();
 	}
 }

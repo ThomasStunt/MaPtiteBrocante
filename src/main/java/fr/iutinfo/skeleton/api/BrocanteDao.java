@@ -45,9 +45,9 @@ public interface BrocanteDao {
 	@RegisterMapperFactory(BeanMapperFactory.class)
 	void deleteBrocante(@Bind("id") int id);
 	
-	/*@SqlUpdate("update brocante set libelle = :brocante.libelle where id = :id")
+	@SqlUpdate("update brocante set libelle = :brocante.libelle, nomOrganisateur = :brocante.nomOrganisateur, emailOrganisateur = :brocante.emailOrganisateur, telOrganisateur = :brocante.telOrganisateur, pays = :brocante.pays, departement = :brocante.departement, ville = :brocante.ville, codePostal = :brocante.codePostal, rue = :brocante.rue, date = :brocante.date, heure_debut = :brocante.heure_debut, heure_fin = :brocante.heure_fin, salle = :brocante.salle, handicape = :brocante.handicape, prixEmplacement = :brocante.prixEmplacement  where id = :id")
 	@RegisterMapperFactory(BeanMapperFactory.class)
-	void updateBrocante(@Bind("id") int id, @BindBean() Brocante brocante);*/
+	void updateBrocante(@Bind("id") int id, @BindBean("brocante") Brocante brocante);
 
 	@SqlQuery("select * from brocante where id = :id")
 	@RegisterMapperFactory(BeanMapperFactory.class)

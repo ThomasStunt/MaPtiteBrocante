@@ -26,46 +26,46 @@ function setSecureHeader(req){
 Retourne l'utilisateur après tentative de connexion au serveur
 **/
 function getActualUser () {
-$.ajax({
-	url: "/v1/login",
-	type: "GET",
-	dataType: "json",
-	beforeSend : function(req) {
-	 req.setRequestHeader("Authorization", "Basic " + btoa($("#userlogin").val() + ":" + $("#passwdlogin").val()));
-	 current_passwd = $("#passwdlogin").val();
-	},
-	success: function(json) {
-		if(json != null){
-			current_user = json;
-			checkUser();
+	$.ajax({
+		url: "/v1/login",
+		type: "GET",
+		dataType: "json",
+		beforeSend : function(req) {
+			req.setRequestHeader("Authorization", "Basic " + btoa($("#userlogin").val() + ":" + $("#passwdlogin").val()));
+			current_passwd = $("#passwdlogin").val();
+		},
+		success: function(json) {
+			if(json != null){
+				current_user = json;
+				checkUser();
+			}
+		},
+		error: function(xhr, status, errorThrown) {
+			alert("Something went wrong");
+			console.log("xhr: ", xhr);
+			console.log("status: ", status);
+			console.log("errorThrown: ", errorThrown);
 		}
-	},
-	error: function(xhr, status, errorThrown) {
-		alert("Something went wrong");
-		console.log("xhr: ", xhr);
-		console.log("status: ", status);
-		console.log("errorThrown: ", errorThrown);
-	}
-});
+	});
 };
 
 /**
-Affiche les options correspondant au role de l'utilisateur définit dans la variable current_user
+Affiche les options correspondant au role de l'utilisateur défini dans la variable current_user
 **/
 function checkUser () {
-if(current_user != null){
-	$('.anonymous-button').hide();
-	$('.user-button').show();
+	if(current_user != null){
+		$('.anonymous-button').hide();
+		$('.user-button').show();
 
-	if(current_user.rank > 0)
-		$('.admin-button').show();
+		if(current_user.rank > 0)
+			$('.admin-button').show();
 
-} else{
-	$('.user-button').hide();
-	$('.admin-button').hide();
-	$('.anonymous-button').show();
-}
-changeView("#braderie-list");
+	} else{
+		$('.user-button').hide();
+		$('.admin-button').hide();
+		$('.anonymous-button').show();
+	}
+	changeView("#braderie-list");
 };
 
 
@@ -74,8 +74,8 @@ changeView("#braderie-list");
 Cache toutes les vues et affiche celle d'id view passée en paramètre
 **/
 function changeView(view){
-$(".view").hide();
-$(view).show();
+	$(".view").hide();
+	$(view).show();
 }
 
 
@@ -105,26 +105,26 @@ Liste les braderies et ajoute des options en fonction du role de l'utilisateur
 **/
 $('#braderie-list-button').click( function () {
 	$('#tableMap').hide();
-var view = "#braderie-list";
-changeView(view);
-var isAdmin = (current_user != null && current_user.rank > 0);
-$.ajax({
-	url: isAdmin ? uri + "/all" : uri,
-	type: "GET",
-	dataType: "JSON",
-	beforeSend : function(req) {
-		setSecureHeader(req);
-	},
-	success: function(json) {
-		$(view).html(getBraderieListHtml(json, isAdmin));
-	},
-	error: function(xhr, status, errorThrown) {
-		alert("Something went wrong");
-		console.log("xhr: ", xhr);
-		console.log("status: ", status);
-		console.log("errorThrown: ", errorThrown);
-	}
-});
+	var view = "#braderie-list";
+	changeView(view);
+	var isAdmin = (current_user != null && current_user.rank > 0);
+	$.ajax({
+		url: isAdmin ? uri + "/all" : uri,
+		type: "GET",
+		dataType: "JSON",
+		beforeSend : function(req) {
+			setSecureHeader(req);
+		},
+		success: function(json) {
+			$(view).html(getBraderieListHtml(json, isAdmin));
+		},
+		error: function(xhr, status, errorThrown) {
+			alert("Something went wrong");
+			console.log("xhr: ", xhr);
+			console.log("status: ", status);
+			console.log("errorThrown: ", errorThrown);
+		}
+	});
 });
 
 /**
@@ -132,44 +132,45 @@ Affiche la liste des braderies passées en paramètre (json), et si le booleen i
 On affiche des options de suppresion, modification et validation
 **/
 function getBraderieListHtml(braderies, isAdmin){
-var res = "";
-if(braderies[0] == null) {
-	res = "Aucune brocante disponible.";
-} else {
-	res = "<div><table class=\"table table-striped table-bordered\" style=\"text-align:center\"><tr>";
-	res += "<td>Libelle</td><td>Organisateur</td><td>Adresse</td><td>Horaires</td><td>Salle</td><td>Prix emplacement</td><td>Accès Handicapé</td>";
-	if(isAdmin)
-		res+="<td>Action</td>";
-	res += "</tr><tr>";
-	var b;
-	for(i in braderies) {
-			b = braderies[i];
-			res+="<td>"+b.libelle+"</td>";
-			res+="<td>"+b.nomOrganisateur+" tel : "+b.telOrganisateur+" mail : "+b.emailOrganisateur+"</td>";
-			res+="<td>"+ b.rue + b.codePostal + b.ville + b.pays +"</td>";
-			res+="<td>"+b.date+" de "+ b.heure_debut + " à " + b.heure_fin + "</td>";
-			res+="<td>"+ b.salle + "</td>";
-			res+="<td>" + b.prixEmplacement + "€/m</td>";
-			res+="<td>";
-			if(b.handicape)
-				res+= "oui";
-			else
-				res+="non";
-			res+="</td>";
-
-			if(isAdmin){
+	var res = "";
+	if(braderies[0] == null) {
+		res = "Aucune brocante disponible.";
+	} else {
+		res = "<div><table class=\"table table-striped table-bordered\" style=\"text-align:center\"><tr>";
+		res += "<td>Libelle</td><td>Organisateur</td><td>Adresse</td><td>Horaires</td><td>Salle</td><td>Prix emplacement</td><td>Accès Handicapé</td>";
+		if(isAdmin)
+			res+="<td>Action</td>";
+		res += "</tr><tr>";
+		var b;
+		for(i in braderies) {
+				b = braderies[i];
+				res+="<td>"+b.libelle+"</td>";
+				res+="<td>"+"nom : " + b.nomOrganisateur+"<br> tel : "+b.telOrganisateur+"<br> mail : "+b.emailOrganisateur+"</td>";
+				res+="<td>"+ b.rue + " " + b.codePostal + " à " + b.ville + " - " + b.pays +"</td>";
+				res+="<td>"+b.date+" <br>de "+ b.heure_debut + " à " + b.heure_fin + "</td>";
+				res+="<td>"+ b.salle + "</td>";
+				res+="<td>" + b.prixEmplacement + "€/m</td>";
 				res+="<td>";
-				if(!b.valide)
-					res+="<button onclick='validateOrDeleteBraderie("+b.id+", true)'>Valider</button>";
-				res+="<button onclick='validateOrDeleteBraderie("+b.id+", false)'>Supprimer</button>";
+				if(b.handicape)
+					res+= "oui";
+				else
+					res+="non";
 				res+="</td>";
-			}
-			res+="</tr><tr>"
+
+				if(isAdmin){
+					res+="<td>";
+					if(!b.valide)
+						res+="<button onclick='validateOrDeleteBraderie("+b.id+", true)'>Valider</button>";
+					res+="<button onclick='validateOrDeleteBraderie("+b.id+", false)'>Supprimer</button>";
+					res+="<button onclick='modifyBraderie("+JSON.stringify(b)+")'>Modifier</button>";
+					res+="</td>";
+				}
+				res+="</tr><tr>"
+		}
+		res+="</tr></table></div>";
+		$("#outputList").html(res);
 	}
-	res+="</tr></table></div>";
-	$("#outputList").html(res);
-}
-return res;
+	return res;
 }
 
 /**
@@ -199,6 +200,99 @@ function validateOrDeleteBraderie(idBraderie, validate){
 	});
 }
 
+function modifyBraderie(brad) {
+	var braderie = brad;
+	changeView("#braderie-form");
+
+	var id = braderie.id;
+
+	$("#inputLibelle").val(braderie.libelle);
+
+	$("#inputNomBroc").val(braderie.nomOrganisateur);
+	$("#inputMailBroc").val(braderie.emailOrganisateur);
+	$("#inputTelBroc").val(braderie.telOrganisateur);
+
+	$("#inputVille").val(braderie.ville);
+	$("#inputPays").val(braderie.pays);
+	$("#inputDepart").val(braderie.departement);
+	$("#inputCPostal").val(braderie.codePostal);
+	$("#inputAddr1").val(braderie.rue);
+
+	$("#inputDate").val(braderie.date);
+	$("#inputHDeb").val(braderie.heure_debut);
+	$("#inputHFin").val(braderie.heure_fin);
+
+	$("#inputSalle").val(braderie.salle);
+	$("#inputLibelle").val(braderie.libelle);
+	
+	if(braderie.handicape) {
+		$("#handicY").checked = true;
+		$("#handicN").checked = false;
+	} else { 
+		$("#handicN").checked = true;
+		$("#handicY").checked = false;
+	}
+
+	$("#inputPrix").val(braderie.prixEmplacement);
+
+	$('#submit').hide();
+	$('#modif').show();
+
+	$('#modif').click(function (){
+
+		var handic = function() {
+			if($("#handicY").attr('checked', true)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		var dat = {
+			libelle : $("#inputLibelle").val(),
+
+			nomOrganisateur: $("#inputNomBroc").val(),
+			emailOrganisateur: $("#inputMailBroc").val(),
+			telOrganisateur: $("#inputTelBroc").val(),
+
+			pays: $("#inputPays").val(),
+			departement: $("#inputDepart").val(),
+			codePostal: $("#inputCPostal").val(),
+			ville: $("#inputVille").val(),
+			rue : $('#inputAddr1').val()+" "+$('#inputAddr2').val()+" "+$('#inputAddr3').val()+" "+$('#inputAddr4').val(),
+
+			date: $("#inputDate").val(),
+			heure_debut : $("#inputHDeb").val(),
+			heure_fin : $("#inputHFin").val(),
+
+			salle: $("#inputSalle").val(),
+			handicape: handic,
+			prixEmplacement : $("#inputPrix").val()
+		};
+
+		$.ajax({
+			url: uri+"/"+braderie.id,
+			type: "PUT",
+			dataType: "json",
+			processData: false,
+			contentType: "application/json; charset=UTF-8",
+			data: JSON.stringify(dat),
+			beforeSend : function(req) {
+				setSecureHeader(req);
+			},
+			success: function(json) {
+				alert("succes");
+				$("#output").html("Brocante modifiée !");
+			},
+			error: function(xhr, status, errorThrown) {
+				alert("Something went wrong");
+				console.log("xhr: ", xhr);
+				console.log("status: ", status);
+				console.log("errorThrown: ", errorThrown);
+			}
+		});
+	})
+}
 
 /**
 	Bouton ajouter/modifier une braderie
@@ -207,58 +301,68 @@ function validateOrDeleteBraderie(idBraderie, validate){
 $("#braderie-modify-button").click(function() {
 	$('#tableMap').hide();
 	changeView("#braderie-form");
+	$('#submit').show();
+	$('#modif').hide();
 });
+
+function checker(handicY, handicN) {
+	if($('#handicY').checked)
+		$('#handicN').checked = false;
+	else
+		$('#handicN').checked = true;
+}
 
 // AJOUTER UNE BRADERIE
 $("#add #submit").click(function() {
-var handic = function() {
-	if($("#handicY").attr('checked', true)) {
-		return true;
-	} else {
-		return false;
+	var handic = function() {
+		if($("#handicY").attr('checked', true)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
-}
-var dat = {
-	libelle : $("#inputLibelle").val(),
 
-	nomOrganisateur: $("#inputNomBroc").val(),
-	emailOrganisateur: $("#inputMailBroc").val(),
-	telOrganisateur: $("#inputTelBroc").val(),
+	var dat = {
+		libelle : $("#inputLibelle").val(),
 
-	pays: $("#inputPays").val(),
-	departement: $("#inputDepart").val(),
-	codePostal: $("#inputCPostal").val(),
-	ville: $("#inputVille").val(),
-	rue : $("#inputAddr1").val()+" "+$("#inputAddr2").val()+" "+$("#inputAddr3").val()+" "+$("#inputAddr4").val(),
+		nomOrganisateur: $("#inputNomBroc").val(),
+		emailOrganisateur: $("#inputMailBroc").val(),
+		telOrganisateur: $("#inputTelBroc").val(),
 
-	date: $("#inputDate").val(),
-	heure_debut : $("#inputHDeb").val(),
-	heure_fin : $("#inputHFin").val(),
+		pays: $("#inputPays").val(),
+		departement: $("#inputDepart").val(),
+		codePostal: $("#inputCPostal").val(),
+		ville: $("#inputVille").val(),
+		rue : $('#inputAddr1').val()+" "+$('#inputAddr2').val()+" "+$('#inputAddr3').val()+" "+$('#inputAddr4').val(),
 
-	salle: $("#inputSalle").val(),
-	handicape : handic,
-	prixEmplacement : $("#inputPrix").val(),
-	valide: false
-};
-console.log(dat);
+		date: $("#inputDate").val(),
+		heure_debut : $("#inputHDeb").val(),
+		heure_fin : $("#inputHFin").val(),
 
-$.ajax({
-	url: uri,
-	type: "POST",
-	dataType: "json",
-	processData: false,
-	contentType: "application/json; charset=UTF-8",
-	data: JSON.stringify(dat),
-	success: function(json) {
-		$("#output").html("Brocante ajoutée !");
-	},
-	error: function(xhr, status, errorThrown) {
-		alert("Something went wrong");
-		console.log("xhr: ", xhr);
-		console.log("status: ", status);
-		console.log("errorThrown: ", errorThrown);
-	},
-});
+		salle: $("#inputSalle").val(),
+		handicape : handic,
+		prixEmplacement : $("#inputPrix").val(),
+		valide: false
+	};
+	console.log(dat);
+
+	$.ajax({
+		url: uri,
+		type: "POST",
+		dataType: "json",
+		processData: false,
+		contentType: "application/json; charset=UTF-8",
+		data: JSON.stringify(dat),
+		success: function(json) {
+			$("#output").html("Brocante ajoutée !");
+		},
+		error: function(xhr, status, errorThrown) {
+			alert("Something went wrong");
+			console.log("xhr: ", xhr);
+			console.log("status: ", status);
+			console.log("errorThrown: ", errorThrown);
+		}
+	});
 	$('#braderie-modify-button').trigger("click");
 });
 
@@ -274,37 +378,37 @@ $('#map-button').click( function () {
 
 // RECUPERER LES INFORMATIONS DES BRADERIES
 function getInformationBraderie (){
-$.ajax({
-	url: "/v1/brocante",
-	type: "GET",
-	dataType: "json",
-	success: function(json) {
-		if(json[0] == null) {
-			//a afficher il n'y a pas de braderie aux alentours
-		} else {
-			var braderies = [];
-			for(i in json) {
-				var info = {
-					'codepostal' : json[i].codePostal,
-					'ville' : json[i].ville,
-					'rue' : json[i].rue,
-					'date' : json[i].date,
-					'heureDeb' : json[i].heure_debut,
-					'heureFin' : json[i].heure_fin,
-					'name' : json[i].libelle
-				};
-				braderies.push(info);
-				}
-				getGeolocalisations(braderies);
+	$.ajax({
+		url: "/v1/brocante",
+		type: "GET",
+		dataType: "json",
+		success: function(json) {
+			if(json[0] == null) {
+				//a afficher il n'y a pas de braderie aux alentours
+			} else {
+				var braderies = [];
+				for(i in json) {
+					var info = {
+						'codepostal' : json[i].codePostal,
+						'ville' : json[i].ville,
+						'rue' : json[i].rue,
+						'date' : json[i].date,
+						'heureDeb' : json[i].heure_debut,
+						'heureFin' : json[i].heure_fin,
+						'name' : json[i].libelle
+					};
+					braderies.push(info);
+					}
+					getGeolocalisations(braderies);
+			}
+		},
+		error: function(xhr, status, errorThrown) {
+			alert("Something went wrong");
+			console.log("xhr: ", xhr);
+			console.log("status: ", status);
+			console.log("errorThrown: ", errorThrown);
 		}
-	},
-	error: function(xhr, status, errorThrown) {
-		alert("Something went wrong");
-		console.log("xhr: ", xhr);
-		console.log("status: ", status);
-		console.log("errorThrown: ", errorThrown);
-	}
-});
+	});
 };
 
 function trimSplitJoin(chaine){
@@ -381,7 +485,6 @@ function addInformation(braderie, distance, origin, destination){
             	direction.setDirections(response);
         	}
     	});
-
 	});
 };
 
