@@ -5,6 +5,8 @@ var current_position;
 
 var uri = "/v1/brocante";
 var map;
+var directionDisplay;
+var directionsService;
 
 /**
 	On load show user interface corresponding to his rank
@@ -344,7 +346,6 @@ $("#add #submit").click(function() {
 		prixEmplacement : $("#inputPrix").val(),
 		valide: false
 	};
-	console.log(dat);
 
 	$.ajax({
 		url: uri,
@@ -413,27 +414,32 @@ function getInformationBraderie (){
 
 function trimSplitJoin(chaine){
 	return $.trim(chaine).split(' ').join('+');
-}
+};
 
 // RECUPERER LA LATITUDE ET LA LONGITUDE D'UNE BRADERIE
 function getGeolocalisations(braderies){
 	for(var i in braderies){
-		$.ajax({
-			url: trimSplitJoin("https://maps.googleapis.com/maps/api/geocode/json?address="+ braderies[i].rue +",+" + braderies[i].codePostal + "+"+braderies[i].ville+",+"+"France"),
-			type: "GET",
-			dataType: "json",
-			success: function(json) {
-				addMarker(json, braderies[i]);
-			},
-			error: function(xhr, status, errorThrown) {
-
-				alert("Something went wrong");
-				console.log("xhr: ", xhr);
-				console.log("status: ", status);
-				console.log("errorThrown: ", errorThrown);
-			}
-		});
+		getGeolocalisation(braderies[i]);
 	}
+};
+
+function getGeolocalisation(braderie){
+	$.ajax({
+		url: trimSplitJoin("https://maps.googleapis.com/maps/api/geocode/json?address="+ braderie.rue +",+" + braderie.codePostal + "+"+braderie.ville+",+"+"France"),
+		type: "GET",
+		dataType: "json",
+		success: function(json) {
+			console.log(braderie);
+			addMarker(json, braderie);
+		},
+		error: function(xhr, status, errorThrown) {
+
+			alert("Something went wrong");
+			console.log("xhr: ", xhr);
+			console.log("status: ", status);
+			console.log("errorThrown: ", errorThrown);
+		}
+	});
 };
 
 function addMarker(json, braderies){
@@ -450,8 +456,6 @@ function addMarker(json, braderies){
   		var origin = new google.maps.LatLng(current_position.lat, current_position.lng);
     	var destination = new google.maps.LatLng(braderiePosition.lat, braderiePosition.lng);
 
-    	var directionsService = new google.maps.DirectionsService();
-
     	directionsService.route({origin:origin, destination:destination, travelMode:google.maps.TravelMode.DRIVING},function(result, status){
     		if(status == google.maps.DirectionsStatus.OK){
     			addInformation(braderies,result.routes[0].legs[0].distance.value / 1000,origin,destination);
@@ -461,11 +465,12 @@ function addMarker(json, braderies){
 };
 
 function addInformation(braderie, distance, origin, destination){
+
 	$('#tableMap').show();
-	$('#tableMap #name').html(braderie.name);
-    $('#tableMap #distance').html(distance + " km");
-    $('#tableMap #heureDeb').html(braderie.heureDeb);
-    $('#tableMap #heureFin').html(braderie.heureFin);
+	$('#tableMap #name').text(braderie.name);
+    $('#tableMap #distance').text(distance + " km");
+    $('#tableMap #heureDeb').text(braderie.heureDeb);
+    $('#tableMap #heureFin').text(braderie.heureFin);
 
 	$('#tableMap #itineraire').click( function () {
 		var request = {
@@ -474,15 +479,9 @@ function addInformation(braderie, distance, origin, destination){
         	travelMode  : google.maps.DirectionsTravelMode.DRIVING
     	}
 
-    	var direction = new google.maps.DirectionsRenderer({
-		    map   : map 
-		});
-
-    	var directionsService = new google.maps.DirectionsService();
-
     	directionsService.route(request, function(response, status){
         	if(status == google.maps.DirectionsStatus.OK){
-            	direction.setDirections(response);
+            	directionDisplay.setDirections(response);
         	}
     	});
 	});
@@ -494,6 +493,11 @@ function initializeMap() {
 	map = new google.maps.Map(mapDiv, {
 	  center: {lat: 44.540, lng: -78.546},
 	  zoom: 12
+	});
+
+	directionsService = new google.maps.DirectionsService();
+	directionDisplay = new google.maps.DirectionsRenderer({
+		    map   : map 
 	});
 
 	var infoWindow = new google.maps.InfoWindow({map: map});
@@ -521,4 +525,4 @@ function initializeMap() {
 function handleLocationError(browserHasGeolocation, infoWindow, pos) {
 	infoWindow.setPosition(pos);
 	infoWindow.setContent(browserHasGeolocation ?'Error: The Geolocation service failed.' :'Error: Your browser doesn\'t support geolocation.');
-}
+};
