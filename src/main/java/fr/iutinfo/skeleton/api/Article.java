@@ -3,10 +3,10 @@ package fr.iutinfo.skeleton.api;
 public class Article {
 	private int id;
 	private String titre;
-	private String theme;
+	private Theme theme;
 	private String texte;
 	
-	public Article(int id, String titre, String theme, String texte){
+	public Article(int id, String titre, Theme theme, String texte){
 		this.setId(id);
 		this.setTitre(titre);
 		this.setTheme(theme);
@@ -19,10 +19,10 @@ public class Article {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getTheme() {
+	public Theme getTheme() {
 		return theme;
 	}
-	public void setTheme(String theme) {
+	public void setTheme(Theme theme) {
 		this.theme = theme;
 	}
 	public String getTexte() {
