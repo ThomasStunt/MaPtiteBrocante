@@ -79,7 +79,7 @@ function changeView(view){
 }
 
 
-// LOGIN PART
+// LOG PART
 
 /**
 Change la vue pour afficher le formulaire de connexion
@@ -288,7 +288,6 @@ function modifyBraderie(brad) {
 				setSecureHeader(req);
 			},
 			success: function(json) {
-				alert("succes");
 				$("#output").html("Brocante modifiée !");
 			},
 			error: function(xhr, status, errorThrown) {
