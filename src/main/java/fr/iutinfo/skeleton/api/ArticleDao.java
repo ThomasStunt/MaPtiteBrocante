@@ -15,11 +15,11 @@ public interface ArticleDao {
 	@SqlUpdate("create table articles "
 			+ "(id integer primary key autoincrement,"
 			+ " titre varchar(255),"
-			+ " theme varchar(255),"
+			+ " theme integer,"
 			+ " texte text)")
 	void createArticleTable();
 	
-	@SqlQuery("select * from articles order by id")
+	@SqlQuery("select * from articles order by id desc")
 	@RegisterMapperFactory(BeanMapperFactory.class)
 	List<Article> all();
 	

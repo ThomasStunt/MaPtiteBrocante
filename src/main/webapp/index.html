@@ -11,8 +11,17 @@
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDzBlA7Z8KWJX-5TUR6A5-4Qa19BfA2-_A&libraries=geometry"
         async defer></script>
 
-        <!-- BOOTSTRAP -->
+		<!-- BOOTSTRAP -->
 		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+		<!-- Markdown Bootstrap -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-markdown/2.10.0/css/bootstrap-markdown.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-markdown/2.10.0/js/bootstrap-markdown.min.js"></script>
+		
+		<script src="markdown.min.js"></script>
+		
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 
 		<!-- style pour google map-->
 		<style>
@@ -37,6 +46,7 @@
 			<!-- différent boutons -->
 			<div style="text-align:center">
 				<button id="login-button" class="btn btn-default anonymous-button">Login</button>
+				<button id="blog-button" class="btn btn-default">Blog</button>
 				<button id="braderie-list-button" class="btn btn-default">Lister les braderies</button>
 				<button id="map-button" class="btn btn-default">Afficher les braderies aux alentours</button>
 				<button id="braderie-modify-button" class="btn btn-default user-button">Proposer une braderie</button>
@@ -44,6 +54,18 @@
 			</div>
 			<hr id="hrBis" style="display:none">
 			<br>
+
+			<!-- Vue des articles -->
+			<div id="article" class="col-sm-10 view">
+				<div id="article-list">
+				</div>
+				<div id="article-form" style="text-align:center">
+					<input id="article-title" type="text" placeholder="Title?"/>
+					<textarea id="article-textarea" name="content" rows="10"></textarea>
+					<hr/>
+					<button type="button" class="btn btn-default" id="article-form-button" onclick="return false">Envoyer</button>
+				</div>
+			</div>
 
 			<!-- Vue Formulaire de connexion -->
 			<div id="login-form" class="col-sm-10 view">

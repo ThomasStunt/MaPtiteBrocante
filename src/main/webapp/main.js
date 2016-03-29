@@ -79,6 +79,108 @@ function changeView(view){
 }
 
 
+// ARTICLE PART
+$('#blog-button').click(function() {
+	changeView("#article");
+	var isAdmin = current_user && current_user.rank > 0;
+	$.ajax({
+		url: "/v1/articles",
+		type: "GET",
+		dataType: "json",
+		success: function(json) {
+			var articles = [];
+			for(i in json) {
+				var info = {
+					'id' : json[i].id,
+					'titre' : json[i].titre,
+					'theme' : json[i].theme,
+					'texte' : json[i].texte
+				};
+				articles.push(info);
+			}
+			getArticleListHtml(articles, isAdmin);
+		},
+		error: function(xhr, status, errorThrown) {
+			alert("Something went wrong");
+			console.log("xhr: ", xhr);
+			console.log("status: ", status);
+			console.log("errorThrown: ", errorThrown);
+		}
+	});
+	
+	if(isAdmin){
+		$("#article-form").show();
+		$("#article-textarea").markdown({autofocus:false,savable:false});
+	} else {
+		$("#article-form").hide();
+	}
+});
+
+$('#article-form-button').click(function() {
+	$.ajax({
+		url: "/v1/articles",
+		type: "POST",
+		contentType: "application/json; charset=UTF-8",
+		beforeSend : function(req) {
+			setSecureHeader(req);
+		},
+		data : JSON.stringify({
+			titre: $("#article-title").val(),
+			texte: $("#article-textarea").val(),
+			theme : "none"
+		}),
+		success: function(json) {
+			$("#blog-button").trigger("click");
+		},
+		error: function(xhr, status, errorThrown) {
+			alert("Something went wrong");
+			console.log("xhr: ", xhr);
+			console.log("status: ", status);
+			console.log("errorThrown: ", errorThrown);
+		}
+	});
+
+});
+
+function getArticleListHtml(articles, isAdmin){
+	var res = "";
+	if(articles[0] == null) {
+		res = "Aucun article disponible.";
+	} else {
+		var article;
+		for(i in articles) {
+			article = articles[i];
+			res += "<div>";
+			res += "<h1>"+article.titre+"</h1><div>";
+			res +=  markdown.toHTML(article.texte)+"</div>";
+			if(isAdmin)
+				res += "<button onclick='supprimerArticle("+article.id+")'>Supprimer</button>"
+			res += "</div><hr><br>";
+		}	
+	}
+	$("#article-list").html(res);
+}
+
+function supprimerArticle(id){
+	$.ajax({
+		url: "/v1/articles/"+id,
+		type: "DELETE",
+		beforeSend : function(req) {
+			setSecureHeader(req);
+		},
+		success: function(json) {
+			$("#blog-button").trigger("click");
+		},
+		error: function(xhr, status, errorThrown) {
+			alert("Something went wrong");
+			console.log("xhr: ", xhr);
+			console.log("status: ", status);
+			console.log("errorThrown: ", errorThrown);
+			
+		}
+	});
+}
+
 // LOGIN PART
 
 /**
