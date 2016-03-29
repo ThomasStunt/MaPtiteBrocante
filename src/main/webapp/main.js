@@ -97,6 +97,13 @@ $('#login-form-button').click(function(){
 	checkUser();
 });
 
+/**
+Délog de l'utilisateur
+**/
+$('#disconnect-button').click(function() {
+	document.location.href="index.html";
+})
+
 // BRADERIE PART
 
 /**

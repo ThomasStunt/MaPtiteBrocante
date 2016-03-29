@@ -40,6 +40,7 @@
 				<button id="braderie-list-button" class="btn btn-default">Lister les braderies</button>
 				<button id="map-button" class="btn btn-default">Afficher les braderies aux alentours</button>
 				<button id="braderie-modify-button" class="btn btn-default user-button">Proposer une braderie</button>
+				<button id="disconnect-button" class="btn btn-default user-button" style="display:none">Déconnexion</button>
 			</div>
 			<hr id="hrBis" style="display:none">
 			<br>
@@ -130,7 +131,7 @@
 					<label for="inputSalle">Salle</label>
 					<input type="text" class="form-control" id="inputSalle" placeholder="Salle">
 				</div>
-				<!-- AcessHandic -->
+				<!-- AccessHandic -->
 				<div class="form-group col-sm-10">
 					<label for="inputHandic">Accès handicapé ?</label>
 					<br><input type="checkbox" id="handicY" onclick="checker(handicY, handicN)"> Oui.
@@ -141,15 +142,21 @@
 					<label for="inputPrix">Prix emplacement</label>
 					<input type="text" class="form-control" id="inputPrix" placeholder="Prix (de forme 0.0)">
 				</div>
+				<!-- Boutons -->
 				<div id="add">
 					<br>
 					<button type="submit" id="submit" class="btn btn-default">Envoyer</button>
 					<br>
 					<button type="submit" id="modif" class="btn btn-default" style="display:none">Modifier</button>
 				</div>
+				<!-- Sortie listes --> 
 				<div class="form-group col-sm-10" id="output">
 
 				</div>
+			</div>
+
+			<div>
+
 			</div>
 
 			<!-- Vue google map avec table-->
