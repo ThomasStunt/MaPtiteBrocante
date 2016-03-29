@@ -63,7 +63,15 @@ public class UserDBResource {
 
 	@GET
 	@Path("/{name}")
-	public User getUser(@PathParam("name") String name) {
+	public User getUser(@PathParam("name") String name, @Context SecurityContext context) {
+		User currentUser = (User) context.getUserPrincipal();
+		logger.debug("Current User :" + currentUser.toString());
+		if (User.isAnonymous(currentUser) || currentUser.getRank() <= 0) {
+			logger.debug("UNAUTHORIZED");
+			throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)
+					.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"Ma ptite brocante\"")
+					.entity("Ressouce requires login.").build());
+		}
 		User user = dao.findByName(name);
 		if (user == null) {
 			throw new WebApplicationException(404);
@@ -72,7 +80,15 @@ public class UserDBResource {
 	}
 
 	@GET
-	public List<User> getAllUsers() {
+	public List<User> getAllUsers(@Context SecurityContext context) {
+		User currentUser = (User) context.getUserPrincipal();
+		logger.debug("Current User :" + currentUser.toString());
+		if (User.isAnonymous(currentUser) || currentUser.getRank() <= 0) {
+			logger.debug("UNAUTHORIZED");
+			throw new WebApplicationException(Response.status(Response.Status.UNAUTHORIZED)
+					.header(HttpHeaders.WWW_AUTHENTICATE, "Basic realm=\"Ma ptite brocante\"")
+					.entity("Ressouce requires login.").build());
+		}
 		return dao.all();
 	}
 
