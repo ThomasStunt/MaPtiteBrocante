@@ -33,6 +33,7 @@
 			 	background-color: #CCC;
 	      	}
     	</style>
+
 	</head>
 	<body>
 		<div class="container">
@@ -47,12 +48,13 @@
 			<div style="text-align:center">
 				<button id="login-button" class="btn btn-default anonymous-button">Login</button>
 				<button id="blog-button" class="btn btn-default">Blog</button>
+				<button id="inscription-button" class="btn btn-default anonymous-button">Inscription</button>
 				<button id="braderie-list-button" class="btn btn-default">Lister les braderies</button>
 				<button id="map-button" class="btn btn-default">Afficher les braderies aux alentours</button>
 				<button id="braderie-modify-button" class="btn btn-default user-button">Proposer une braderie</button>
 				<button id="disconnect-button" class="btn btn-default user-button" style="display:none">Déconnexion</button>
 			</div>
-			<hr id="hrBis" style="display:none">
+			<hr id="hrBis">
 			<br>
 
 			<!-- Vue des articles -->
@@ -69,15 +71,30 @@
 
 			<!-- Vue Formulaire de connexion -->
 			<div id="login-form" class="col-sm-10 view">
+				<h4>Connexion</h4>
 				<form class="form-inline">
 					<div class="form-group">
-					    <input type="text" class="form-control" id="userlogin" placeholder="Login">
+						<input type="text" class="form-control" id="userlogin" placeholder="Login">
 					</div>
 					<div class="form-group">
-					    <input type="password" class="form-control" id="passwdlogin" placeholder="Password">
+						<input type="password" class="form-control" id="passwdlogin" placeholder="Password">
 					</div>
 					<button type="button" class="btn btn-default" id="login-form-button" onclick="return false">Se connecter</button>
-				</form>
+ 				</form>
+			</div>
+
+			<!-- Vue inscription -->
+			<div id="inscription-form" class="col-sm-10 view">
+				<h4>Inscription</h4>
+				<form class="form-inline">
+					<div class="form-group">
+						<input type="text" class="form-control" id="userinscription" placeholder="Login">
+					</div>
+					<div class="form-group">
+						<input type="password" class="form-control" id="passwdinscription" placeholder="Password">
+					</div>
+					<button type="button" class="btn btn-default" id="inscription-form-button" onclick="return false">S'inscrire</button>
+ 				</form>
 			</div>
 
 			<!-- Vue lister les braderies-->
@@ -177,10 +194,6 @@
 				</div>
 			</div>
 
-			<div>
-
-			</div>
-
 			<!-- Vue google map avec table-->
 			<div id="information"><br/>
 				<table id="tableMap" class="table table-hover" style="display:none">
@@ -190,6 +203,10 @@
 			</div>
 			<div id="map" class="view" style="display:none"></div>
 					
-			<script src="./main.js"></script>
+	    	<!-- Scripts persos -->
+			<script type="text/javascript" src="./main.js"></script>
+	    	<script type="text/javascript" src="./map.js"></script>
+			<script type="text/javascript" src="./log.js"></script>
+			<script type="text/javascript" src="./braderie.js"></script>
 	</body>
 </html>
