@@ -1,6 +1,6 @@
 //VARIABLE GLOBAL
 var current_user;
-var current_passwd;
+var current_token;
 var current_position;
 
 var uri = "/v1/brocante";
@@ -18,21 +18,21 @@ $(document).ready( function () {
 	Add Authorization header to ajax request to access secure resource
 **/
 function setSecureHeader(req){
-	if(current_user && current_passwd)
- 		req.setRequestHeader("Authorization", "Basic " + btoa(current_user.name + ":" + current_passwd));
+	if(current_token)
+ 		req.setRequestHeader("Authorization", "Basic " + current_token);
 }
 
 /**
 Retourne l'utilisateur après tentative de connexion au serveur
 **/
 function getActualUser () {
+	current_token = btoa($("#userlogin").val() + ":" + $("#passwdlogin").val());
 	$.ajax({
 		url: "/v1/login",
 		type: "GET",
 		dataType: "json",
 		beforeSend : function(req) {
-			req.setRequestHeader("Authorization", "Basic " + btoa($("#userlogin").val() + ":" + $("#passwdlogin").val()));
-			current_passwd = $("#passwdlogin").val();
+			setSecureHeader(req);
 		},
 		success: function(json) {
 			if(json != null){
