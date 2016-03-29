@@ -5,3 +5,8 @@
 	height: 500px;
 	background-color: #CCC;
 }
+
+#login-form {
+	width : 50%; 
+	margin : auto;
+}
