@@ -56,8 +56,7 @@ public class UserDBResource {
 	@POST
 	public User createUser(User user){
         user.resetPasswordHash();
-        int id = dao.insert(user);
-        user.setId(id);
+        dao.insert(user);
 		return user;
 	}
 
