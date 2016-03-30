@@ -40,7 +40,7 @@ function getBraderieListHtml(braderies, isAdmin){
 		res = "Aucune brocante disponible.";
 	} else {
 		res = "<div><table class=\"table table-striped table-bordered\" style=\"text-align:center\"><tr>";
-		res += "<td>Libelle</td><td>Organisateur</td><td>Adresse</td><td>Horaires</td><td>Salle</td><td>Prix emplacement</td><td>Accès Handicapé</td>";
+		res += "<td>Libelle</td><td>Organisateur</td><td>Adresse</td><td>Horaires</td><td>Salle</td><td>Prix emplacement</td>";
 		if(isAdmin)
 			res+="<td>Action</td>";
 		res += "</tr><tr>";
@@ -53,12 +53,12 @@ function getBraderieListHtml(braderies, isAdmin){
 				res+="<td>"+b.date+" <br>de "+ b.heure_debut + " à " + b.heure_fin + "</td>";
 				res+="<td>"+ b.salle + "</td>";
 				res+="<td>" + b.prixEmplacement + "€/m</td>";
-				res+="<td>";
+				/*res+="<td>";
 				if(b.handicape)
 					res+= "oui";
 				else
 					res+="non";
-				res+="</td>";
+				res+="</td>";*/
 
 				if(isAdmin){
 					res+="<td>";
@@ -128,13 +128,13 @@ function modifyBraderie(brad) {
 	$("#inputSalle").val(braderie.salle);
 	$("#inputLibelle").val(braderie.libelle);
 	
-	if(braderie.handicape) {
+	/*if(braderie.handicape) {
 		$("#handicY").checked = true;
 		$("#handicN").checked = false;
 	} else { 
 		$("#handicN").checked = true;
 		$("#handicY").checked = false;
-	}
+	}*/
 
 	$("#inputPrix").val(braderie.prixEmplacement);
 
@@ -143,13 +143,13 @@ function modifyBraderie(brad) {
 
 	$('#modif').click(function (){
 
-		var handic = function() {
+		/*var handic = function() {
 			if($("#handicY").attr('checked', true)) {
 				return true;
 			} else {
 				return false;
 			}
-		}
+		}*/
 
 		var dat = {
 			libelle : $("#inputLibelle").val(),
@@ -169,7 +169,7 @@ function modifyBraderie(brad) {
 			heure_fin : $("#inputHFin").val(),
 
 			salle: $("#inputSalle").val(),
-			handicape: handic,
+			//handicape: handic,
 			prixEmplacement : $("#inputPrix").val()
 		};
 
@@ -207,22 +207,22 @@ $("#braderie-modify-button").click(function() {
 	$('#modif').hide();
 });
 
-function checker(handicY, handicN) {
+/*function checker(handicY, handicN) {
 	if($('#handicY').checked)
 		$('#handicN').checked = false;
 	else
 		$('#handicN').checked = true;
-}
+}*/
 
 // AJOUTER UNE BRADERIE
 $("#add #submit").click(function() {
-	var handic = function() {
+	/*var handic = function() {
 		if($("#handicY").attr('checked', true)) {
 			return true;
 		} else {
 			return false;
 		}
-	}
+	}*/
 
 	var dat = {
 		libelle : $("#inputLibelle").val(),
@@ -242,7 +242,7 @@ $("#add #submit").click(function() {
 		heure_fin : $("#inputHFin").val(),
 
 		salle: $("#inputSalle").val(),
-		handicape : handic,
+		//handicape : handic,
 		prixEmplacement : $("#inputPrix").val(),
 		valide: false
 	};
