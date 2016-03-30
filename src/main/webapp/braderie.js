@@ -43,7 +43,7 @@ function getBraderieListHtml(braderies, isAdmin){
 		res += "<td>Libelle</td><td>Organisateur</td><td>Adresse</td><td>Horaires</td><td>Salle</td><td>Prix emplacement</td>";
 		if(isAdmin)
 			res+="<td>Action</td>";
-		res += "</tr><tr>";
+		res+="</tr><tr>";
 		var b;
 		for(i in braderies) {
 				b = braderies[i];
